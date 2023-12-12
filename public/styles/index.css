@@ -1,0 +1,13 @@
+*, html, body {
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Intl Tel Input */
+
+.iti.iti--allow-dropdown {
+  width: 100%;
+}
+
+.iti__country-list, .iti.iti--container {
+  z-index: 9999 !important;
+}

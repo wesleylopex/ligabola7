@@ -1,0 +1,59 @@
+.easy-modal {
+  visibility: hidden;
+  background-color: rgba(0, 0, 0, 0.4);
+
+  display: grid;
+  place-items: center;
+
+  height: 100vh;
+  width: 100vw;
+  
+  position: fixed;
+  left: 0;
+  top: 0;
+
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.easy-modal.easy-modal--fade {
+  opacity: 0;
+  transition: 0.2s;
+}
+
+.easy-modal.easy-modal--active {
+  visibility: visible;
+  z-index: 9999;
+  opacity: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.easy-modal__content {
+  width: 90%;
+  max-width: 28rem;
+  background-color: #fff;
+}
+
+@media (min-width: 640px) {
+  .easy-modal__content {
+    width: 100%;
+  }
+}
+
+.easy-modal.easy-modal--active.easy-modal--fade {
+	opacity: 1;
+	animation-name: fadeInOpacity;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-in;
+	animation-duration: 0.2s;
+}
+
+@keyframes fadeInOpacity {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
