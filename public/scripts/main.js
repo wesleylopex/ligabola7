@@ -127,3 +127,48 @@ function formatDate (date) {
 
   return `${day}/${month}/${year}`
 }
+
+function isCPFValid (cpf) {
+  if (!cpf) return true
+
+  cpf = cpf.replace(/\D/g, '') // Remove any non-digit characters
+
+  // CPF must have 11 digits
+  if (cpf.length !== 11) {
+    return false
+  }
+
+  // CPF cannot be a sequence of repeated digits (e.g., 11111111111)
+  if (/^(\d)\1{10}$/.test(cpf)) {
+    return false
+  }
+
+  // Validate the first digit
+  let sum = 0
+  for (var i = 0; i < 9; i++) {
+    sum += parseInt(cpf.charAt(i)) * (10 - i)
+  }
+  let digit = 11 - (sum % 11)
+  if (digit === 10 || digit === 11) {
+    digit = 0
+  }
+  if (digit !== parseInt(cpf.charAt(9))) {
+    return false
+  }
+
+  // Validate the second digit
+  sum = 0
+  for (i = 0; i < 10; i++) {
+    sum += parseInt(cpf.charAt(i)) * (11 - i)
+  }
+  digit = 11 - (sum % 11)
+  if (digit === 10 || digit === 11) {
+    digit = 0
+  }
+  if (digit !== parseInt(cpf.charAt(10))) {
+    return false
+  }
+
+  // CPF is valid
+  return true
+}

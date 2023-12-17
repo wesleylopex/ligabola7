@@ -15,11 +15,12 @@ class AddMembers extends Migration
                 'unsigned' => true,
                 'auto_increment' => true,
             ],
-            'code' => [
+            'subscription_number' => [
                 'type' => 'VARCHAR',
                 'constraint' => 255,
                 'unique' => true,
-                'null' => false
+                'null' => true,
+                'default' => null
             ],
             'name' => [
                 'type' => 'VARCHAR',
@@ -38,7 +39,8 @@ class AddMembers extends Migration
             'rg' => [
                 'type' => 'VARCHAR',
                 'constraint' => 255,
-                'null' => true
+                'null' => true,
+                'default' => null
             ],
             'created_at' => [
                 'type' => 'DATETIME',

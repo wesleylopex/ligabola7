@@ -44,14 +44,14 @@
   <?= view('manager/components/scripts') ?>
 
   <script>
-    const main = {
+    const pageData = {
       baseURL: '<?= base_url() ?>'
     }
 
     Vue.createApp({
       data () {
         return {
-          baseURL: main.baseURL,
+          baseURL: pageData.baseURL,
           showPassword: false
         }
       },

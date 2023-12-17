@@ -28,7 +28,7 @@
               <i class="w-4 h-4 flex-shrink-0" data-feather="x"></i>
             </button>
           </div>
-          <a href="<?= base_url('manager/team-members/create') ?>">
+          <a href="<?= base_url('manager/members/create') ?>">
             <button data-tippy-content="Novo membro" class="ml-2 p-2 rounded-full bg-blue-600 text-white">
               <i class="w-4 h-4" data-feather="plus"></i>
             </button>
