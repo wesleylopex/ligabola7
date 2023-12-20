@@ -13,6 +13,21 @@ class Members extends BaseController {
   }
 
   public function save () {
+    $validationRules = [
+      'name' => 'required',
+      'birth_date' => 'required',
+      'cpf' => 'required',
+      'rg' => 'permit_empty',
+      'role' => 'required|in_list[athlete,coach,president,assistant]'
+    ];
+
+    if (!$this->validate($validationRules)) {
+      return $this->response->setJSON([
+        'success' => false,
+        'error' => $this->validator->getErrors(),
+      ]);
+    }
+
     $memberModel = new MemberModel();
 
     $subscriptionNumber = $this->request->getPost('subscription_number');

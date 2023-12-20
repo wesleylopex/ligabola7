@@ -68,18 +68,18 @@
               <td class="p-3">{{ member.name }}</td>
               <td class="p-3">{{ member.subscription_number }}</td>
               <td class="p-3">{{ member.cpf }}</td>
-              <td class="p-3">{{ formatDate(member.birth_date) }}</td>
-              <td class="p-3">{{ getTranslatedMemberType(member.type) }}</td>
+              <td class="p-3">{{ getFormattedDate(member.birth_date) }}</td>
+              <td class="p-3">{{ getTranslatedRole(member.role) }}</td>
               <td class="p-3">
-                <span class="py-1 px-2 rounded-full text-xs font-semibold" :class="getMemberStatusColor(member.status)">{{ getTranslatedMemberStatus(member.status) }}</span>
+                <span class="py-1 px-2 rounded-full text-xs font-semibold" :class="getStatusColor(member.status)">{{ getTranslatedStatus(member.status) }}</span>
               </td>
-              <td class="p-3">{{ getMemberStatusDescription(member.id) }}</td>
+              <td class="p-3">{{ getStatusDescription(member.id) }}</td>
               <td v-show="members.some(member => member.status === 'denied')" class="p-3 flex items-center">
-              <a v-if="member.status === 'denied'" :href="`${baseURL}manager/members/update/${member.id}`">
-                <button data-tippy-content="Clique para editar" class="rounded-full p-2 font-medium hover:bg-gray-200">
-                  <i class="w-4 h-4" data-feather="edit"></i>
-                </button>
-              </a>
+                <a v-if="member.status === 'denied'" :href="`${baseURL}manager/members/update/${member.id}`">
+                  <button data-tippy-content="Clique para editar" class="rounded-full p-2 font-medium hover:bg-gray-200">
+                    <i class="w-4 h-4" data-feather="edit"></i>
+                  </button>
+                </a>
               </td>
             </tr>
             <tr v-show="members.length === 0" class="even:bg-white odd:bg-gray-100">
@@ -95,14 +95,110 @@
   <?= view('manager/components/scripts') ?>
 
   <script>
+    const homePageData = {
+      baseURL: '<?= base_url() ?>',
+      members: <?= json_encode($members) ?>
+    }
+
     Vue.createApp({
       data () {
         return {
-          members: [],
+          ...homePageData,
           search: ''
         }
       },
-      methods: {}
+      methods: {
+        getFormattedDate (date) {
+          const [year, month, day] = date.split('-')
+          return `${day}/${month}/${year}`
+        },
+        getTranslatedRole (role) {
+          const roles = {
+            athlete: 'Atleta',
+            coach: 'Treinador',
+            assistant: 'Auxiliar',
+            president: 'Presidente / Representante legal'
+          }
+
+          return roles[role]
+        },
+        getTranslatedStatus (status) {
+          const statuses = {
+            approved: 'Aprovado',
+            pending: 'Pendente',
+            denied: 'Reprovado'
+          }
+
+          return statuses[status]
+        },
+        getStatusColor (status) {
+          const colors = {
+            pending: 'bg-orange-200 text-yellow-800',
+            approved: 'bg-green-200 text-green-800',
+            denied: 'bg-red-200 text-red-800'
+          }
+
+          return colors[status]
+        },
+        getStatusDescription (memberId) {
+          const member = this.members.find(member => member.id === memberId)
+
+          const descriptions = {
+            pending: 'Membro será analisado',
+            approved: 'Membro inscrito com sucesso',
+            denied: member.denied_reason
+          }
+
+          return descriptions[member.status]
+        },
+        runSearch () {
+          const searchWords = this.search.toLowerCase().split(' ')
+          const propsToCompare = ['name', 'cpf', 'rg', 'birth_date', 'role', 'status']
+
+          this.members.forEach(member => {
+            if (!this.search) {
+              return member.isVisible = true
+            }
+
+            let isVisible = false
+
+            for (prop in member) {
+              if (!propsToCompare.includes(prop)) {
+                continue
+              }
+
+              const propValue = String(member[prop]).toLowerCase()
+
+              for (word in searchWords) {
+                if (!searchWords[word]) {
+                  continue
+                }
+
+                if (propValue.includes(searchWords[word])) {
+                  isVisible = true
+                  break
+                }
+              }
+
+              if (isVisible) {
+                break
+              }
+            }
+
+            member.isVisible = isVisible
+          })
+        },
+      },
+      watch: {
+        search () {
+          this.runSearch()
+        }
+      },
+      mounted () {
+        for (member in this.members) {
+          this.members[member].isVisible = true
+        }
+      }
     }).mount('main')
   </script>
 </body>

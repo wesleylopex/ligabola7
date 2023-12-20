@@ -37,4 +37,27 @@ class MemberModel extends Model {
   protected $afterFind = [];
   protected $beforeDelete = [];
   protected $afterDelete = [];
+
+  public function getMembers (int $teamId, int $championshipId): array {
+    $db = \Config\Database::connect();
+ 
+    $members = $db
+      ->table('members_teams_divisions')
+      ->select('
+        members.*,
+        members_teams_divisions.role as role,
+        members_teams_divisions.status as status,
+        members_teams_divisions.denied_reason as denied_reason
+      ')
+      ->join('members', 'members_teams_divisions.member_id = members.id')
+      ->join('teams_divisions', 'members_teams_divisions.team_division_id = teams_divisions.id')
+      ->join('divisions', 'teams_divisions.division_id = divisions.id')
+      ->join('teams', 'teams_divisions.team_id = teams.id')
+      ->where('teams.id', $teamId)
+      ->where('divisions.championship_id', $championshipId)
+      ->get()
+      ->getResult();
+
+    return $members ?? [];
+  }
 }
