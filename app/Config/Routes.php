@@ -18,4 +18,5 @@ $routes->group('manager', ['filter' => 'auth'], static function ($routes) {
 
   $routes->get('members/create', 'Manager\Members::create');
   $routes->post('members/save', 'Manager\Members::save');
+  $routes->get('members/find', 'Manager\Members::find');
 });

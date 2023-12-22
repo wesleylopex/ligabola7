@@ -34,11 +34,13 @@ class AddMembers extends Migration
             'cpf' => [
                 'type' => 'VARCHAR',
                 'constraint' => 255,
+                'unique' => true,
                 'null' => false
             ],
             'rg' => [
                 'type' => 'VARCHAR',
                 'constraint' => 255,
+                'unique' => true,
                 'null' => true,
                 'default' => null
             ],

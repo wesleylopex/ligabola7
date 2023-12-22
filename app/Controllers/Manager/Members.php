@@ -63,4 +63,25 @@ class Members extends BaseController {
 
     return $this->response->setJSON(['success' => true]);
   }
+
+  public function find () {
+    $query = $this->request->getGet('query');
+
+    $memberModel = new MemberModel();
+    $member = $memberModel->where('cpf', $query)
+      ->orWhere('subscription_number', $query)
+      ->first();
+
+    if (!$member) {
+      return $this->response->setJSON([
+        'success' => false,
+        'error' => 'Membro não encontrado'
+      ]);
+    }
+
+    return $this->response->setJSON([
+      'success' => true,
+      'member' => $member
+    ]);
+  }
 }
