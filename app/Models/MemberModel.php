@@ -60,4 +60,27 @@ class MemberModel extends Model {
 
     return $members ?? [];
   }
+
+  public function getForDivision (int $divisionId) {
+    $db = \Config\Database::connect();
+
+    $members = $db
+      ->table('members_teams_divisions')
+      ->select('
+        members.*,
+        members_teams_divisions.role as role,
+        members_teams_divisions.status as status,
+        members_teams_divisions.denied_reason as denied_reason,
+        teams.id as team_id,
+        teams.name as team_name
+      ')
+      ->join('members', 'members_teams_divisions.member_id = members.id')
+      ->join('teams_divisions', 'members_teams_divisions.team_division_id = teams_divisions.id')
+      ->join('teams', 'teams_divisions.team_id = teams.id')
+      ->where('members_teams_divisions.team_division_id', $divisionId)
+      ->get()
+      ->getResult();
+
+    return $members ?? [];
+  }
 }

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <?= view('manager/components/head', ['meta' => ['title' => 'Login']]) ?>
+</head>
+<body
+  class="w-screen min-h-screen overflow-x-hidden bg-cover bg-center bg-no-repeat"
+  style="background-image: url(<?= base_url('images/default-bg.png') ?>)"
+>
+  <main class="w-full h-full min-h-screen py-12 md:py-0 px-4 lg:px-0 grid place-items-center">
+    <div class="w-full max-w-md mx-auto bg-white shadow-2xl rounded-2xl">
+      <div class="p-8 md:p-12 grid place-items-center">
+        <form @submit.prevent="onFormSubmit()" method="post" class="w-full" action="<?= base_url('admin/login/attempt') ?>">
+          <?= csrf_field() ?>
+          <div class="mb-8 flex justify-center">
+            <img class="w-24" src="<?= base_url('images/logo.png') ?>" alt="Liga Bola 7 Society">
+          </div>
+          <div class="grid grid-cols-1 gap-4">
+            <input type="text" name="email" required  placeholder="E-mail" class="mt-1 form-input">
+            <div>
+              <div class="flex items-center mt-1 form-input justify-between p-0 pr-2">
+                <input :type="showPassword ? 'text' : 'password'" placeholder="Senha" name="password" class="form-input border-0 w-full h-full">
+                <button v-show="showPassword" type="button" @click="showPassword = false">
+                  <i class="cursor-pointer w-4 h-4" data-feather="eye"></i>
+                </button>
+                <button v-show="!showPassword" type="button" @click="showPassword = true">
+                  <i class="cursor-pointer w-4 h-4" data-feather="eye-off"></i>
+                </button>
+              </div>
+            </div>
+            <div class="mt-4 grid place-items-center">
+              <button type="submit" data-loader=".form-loader" class="flex items-center justify-center text-sm py-2 rounded-sm font-medium shadow-xl bg-blue-600 text-white w-full md:w-3/4 mx-auto">
+                Acessar conta
+                <i class="form-loader ml-2 rotating hidden" data-feather="loader"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <?= view('manager/components/scripts') ?>
+
+  <script>
+    const pageData = {
+      baseURL: '<?= base_url() ?>'
+    }
+
+    Vue.createApp({
+      data () {
+        return {
+          baseURL: pageData.baseURL,
+          showPassword: false
+        }
+      },
+      methods: {
+        async onFormSubmit () {
+          const form = document.querySelector('form')
+          const body = new FormData(form)
+
+          const response = await fetch(form.action, {
+            method: form.method,
+            body
+          }).then(response => response.json())
+
+          if (!response.success) {
+            const [error] = Object.values(response.error)
+
+            setFormIsLoading(form, false)
+            return showNotification(error)
+          }
+
+          window.location.href = this.baseURL + 'admin'
+        }
+      }
+    }).mount('main')
+  </script>
+</body>
+</html>

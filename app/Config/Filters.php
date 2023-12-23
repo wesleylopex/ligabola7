@@ -11,6 +11,8 @@ use CodeIgniter\Filters\SecureHeaders;
 
 use App\Filters\Auth;
 use App\Filters\AlreadyAuth;
+use App\Filters\AdminAuth;
+use App\Filters\AdminAlreadyAuth;
 
 class Filters extends BaseConfig
 {
@@ -29,6 +31,8 @@ class Filters extends BaseConfig
         'secureheaders' => SecureHeaders::class,
         'auth' => Auth::class,
         'already-auth' => AlreadyAuth::class,
+        'admin-auth' => AdminAuth::class,
+        'admin-already-auth' => AdminAlreadyAuth::class,
     ];
 
     /**

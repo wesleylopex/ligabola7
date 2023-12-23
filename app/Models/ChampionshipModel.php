@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class TeamModel extends Model {
+class ChampionshipModel extends Model {
   protected $DBGroup = 'default';
-  protected $table = 'teams';
+  protected $table = 'championships';
   protected $primaryKey = 'id';
   protected $useAutoIncrement = true;
   protected $returnType = 'object';
@@ -37,18 +37,4 @@ class TeamModel extends Model {
   protected $afterFind = [];
   protected $beforeDelete = [];
   protected $afterDelete = [];
-
-  public function getByDivision (int $divisionId): array {
-    $db = \Config\Database::connect();
-
-    $teams = $db
-      ->table('teams_divisions')
-      ->select('teams.*')
-      ->join('teams', 'teams_divisions.team_id = teams.id')
-      ->where('teams_divisions.division_id', $divisionId)
-      ->get()
-      ->getResult();
-
-    return $teams;
-  }
 }
