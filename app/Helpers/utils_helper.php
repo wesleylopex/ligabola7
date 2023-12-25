@@ -7,3 +7,7 @@ function icon (string $icon, ?string $extension = 'svg') {
 function svg (string $name, ?string $extension = 'svg') {
   return file_get_contents(FCPATH . "images/{$name}.{$extension}");
 }
+
+function hashPassword (string $password) {
+  return password_hash($password, PASSWORD_DEFAULT);
+}

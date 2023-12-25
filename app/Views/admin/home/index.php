@@ -14,6 +14,15 @@
       <h1 class="mt-10 text-3xl font-bold text-gray-100">Liga Bola 7</h1>
     </header>
     <section class="mt-10 grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 w-full max-w-screen-2xl mx-auto px-10 md:px-20 2xl:px-10">
+      <a href="<?= base_url('admin/teams') ?>">
+        <div class="w-full flex flex-col items-center rounded-md bg-white p-6 shadow-md">
+          <div class="p-2 bg-gray-100 rounded-full">
+            <i class="w-5 h-5 text-gray-600" data-feather="shield"></i>
+          </div>
+          <h2 class="my-2 text-gray-600 font-semibold text-sm">Todos os times</h2>
+          <p class="text-gray-400 text-center text-xs">Clique para visualizar todos os times</p>
+        </div>
+      </a>
       <a href="<?= base_url('admin/championships/create') ?>">
         <div class="w-full flex flex-col items-center rounded-md bg-white p-6 shadow-md">
           <div class="p-2 bg-gray-100 rounded-full">

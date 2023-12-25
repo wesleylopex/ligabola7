@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <?php $this->load->view('admin/components/head', $this->data) ?>
+  <?= view('admin/components/head') ?>
 </head>
-<body class="min-h-screen w-screen overflow-x-hidden bg-cover bg-center bg-no-repeat bg-fixed" style="background-image: url(<?= assets('website/images/default-bg.png') ?>)">
+<body class="min-h-screen w-screen overflow-x-hidden bg-cover bg-center bg-no-repeat bg-fixed" style="background-image: url(<?= base_url('images/default-bg.png') ?>)">
   <main id="app" class="my-10 md:my-20">
     <header class="max-w-screen-2xl mx-auto px-10 md:px-20 2xl:px-10">
       <a href="<?= base_url('admin') ?>">
         <button class="p-2 rounded-full bg-gray-200" data-tippy-content="Voltar">
-          <i class="w-5 h-5 text-gray-500" data-feather="arrow-left"></i>
+          <i class="w-4 h-4 text-gray-500" data-feather="chevron-left"></i>
         </button>
       </a>
       <h1 class="mt-10 text-3xl font-bold text-gray-100">Times</h1>
@@ -35,10 +35,6 @@
                   <i class="w-4 h-4" data-feather="x"></i>
                 </button>
               </div>
-              <select v-model="divisionId" class="p-2 px-3 text-sm rounded-full bg-gray-100 text-gray-600">
-                <option value="">Filtrar por divisão</option>
-                <option v-for="division in divisions" :value="division.id">{{ division.name }}</option>
-              </select>
             </div>
           </div>
         </div>
@@ -46,16 +42,14 @@
           <thead>
             <tr>
               <th class="font-bold p-3">Nome</th>
-              <th class="font-bold p-3">Nome de usuário</th>
-              <th class="font-bold p-3">Divisão</th>
+              <th class="font-bold p-3">E-mail</th>
               <th class="font-bold p-3">Ações</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="team in teams" v-show="team.isVisible" class="even:bg-white odd:bg-gray-100">
               <td class="p-3">{{ team.name }}</td>
-              <td class="p-3">{{ team.username }}</td>
-              <td class="p-3">{{ team.division_name }}</td>
+              <td class="p-3">{{ team.email }}</td>
               <td class="p-3 flex items-center">
                 <a :href="`${baseURL}admin/teams/update/${team.id}`">
                   <button data-tippy-content="Clique para editar" class="rounded-full p-2 font-medium hover:bg-gray-200">
@@ -74,10 +68,10 @@
         </table>
       </div>
     </section>
-    <?php $this->load->view('admin/components/delete-confirmation-modal', $this->data) ?>
+    <?= view('admin/components/delete-confirmation-modal') ?>
   </main>
 
-  <?php $this->load->view('admin/components/scripts', $this->data) ?>
+  <?= view('admin/components/scripts') ?>
 
   <!-- Vue JS -->
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -92,11 +86,8 @@
     Vue.createApp({
       data () {
         return {
-          baseURL: pageData.baseURL,
-          teams: pageData.teams,
-          divisions: pageData.divisions,
-          search: '',
-          divisionId: '',
+          ...pageData,
+          search: ''
         }
       },
       methods: {

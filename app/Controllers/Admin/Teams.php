@@ -1,39 +1,36 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php
 
-class Teams extends AdminController {
-  function __construct () {
-    parent::__construct();
-  }
+namespace App\Controllers\Admin;
 
+use App\Controllers\BaseController;
+
+use App\Models\TeamModel;
+
+class Teams extends BaseController {
   public function index () {
-    $this->load->model('TeamModel');
-    $this->data['teams'] = $this->TeamModel->getAllWithDivisionName();
+    $teamModel = new TeamModel();
+    $teams = $teamModel->findAll();
 
-    $this->load->model('DivisionModel');
-    $this->data['divisions'] = $this->DivisionModel->getAll();
-
-    $this->load->view('admin/teams/index', $this->data);
+    return view('admin/teams/index', [
+      'teams' => $teams
+    ]);
   }
 
   public function create () {
-    $this->load->model('DivisionModel');
-    $this->data['divisions'] = $this->DivisionModel->getAll();
-
-    $this->load->view('admin/teams/form', $this->data);
+    return view('admin/teams/form');
   }
 
   public function update (int $teamId) {
-    $this->load->model('TeamModel');
-    $this->data['team'] = $team = $this->TeamModel->getByPrimary($teamId);
+    $teamModel = new TeamModel();
+    $team = $teamModel->find($teamId);
 
     if (!$team) {
-      return redirect('admin');
+      return redirect('admin/teams');
     }
 
-    $this->load->model('DivisionModel');
-    $this->data['divisions'] = $this->DivisionModel->getAll();
-
-    $this->load->view('admin/teams/form', $this->data);
+    return view('admin/teams/form', [
+      'team' => $team
+    ]);
   }
 
   public function delete (int $teamId) {
@@ -44,35 +41,51 @@ class Teams extends AdminController {
   }
 
   public function save () {
-    $this->form_validation->set_rules('id', 'ID', 'trim|is_natural_no_zero');
-    $this->form_validation->set_rules('name', 'Nome', 'trim|required|max_length[255]');
-    $this->form_validation->set_rules('username', 'Nome de usuário', 'trim|required|max_length[255]');
-    $this->form_validation->set_rules('password', 'Senha', 'trim|max_length[255]');
-    $this->form_validation->set_rules('division_id', 'Divisão', 'trim|required|is_natural_no_zero');
+    $validationRules = [
+      'name' => 'required',
+      'email' => 'required|valid_email',
+      'password' => 'permit_empty',
+    ];
 
-    if ($this->form_validation->run() !== true) {
-      return response(['success' => false, 'error' => strip_tags(validation_errors())]);
+    if (!$this->validate($validationRules)) {
+      return $this->response->setJSON([
+        'success' => false,
+        'error' => $this->validator->getErrors(),
+      ]);
     }
 
     $team = [
-      'id' => $this->input->post('id'),
-      'name' => $this->input->post('name'),
-      'username' => $this->input->post('username'),
-      'password' => hashPassword($this->input->post('password')),
-      'division_id' => $this->input->post('division_id')
+      'id' => $this->request->getPost('id'),
+      'name' => $this->request->getPost('name'),
+      'email' => $this->request->getPost('email'),
+      'password' => hashPassword($this->request->getPost('password'))
     ];
 
-    if ($team['id'] && !$team['password']) {
-      unset($team['password']);
+    $teamModel = new TeamModel();
+
+    $imageFile = $this->request->getFile('image');
+
+    if ($imageFile && $imageFile->isValid()) {
+      $team['image'] = setFileName('perfil-' . $imageFile->getClientName());
+      $imageFile->move('uploads/images/teams', $team['image']);
+
+      if (!empty($team['id'])) {
+        $previousTeam = $teamModel->find($team['id']);
+        deleteFileFromFolder('uploads/images/teams/' . $previousTeam->image);
+        
+        $this->resizeProfileImage('uploads/images/teams/' . $team['image']);
+      }
     }
 
-    $this->load->model('TeamModel');
-    $saved = $this->TeamModel->save($team);
+    $teamModel->save($team);
 
-    if (!$saved) {
-      return response(['success' => false, 'error' => 'Não foi possível salvar o time']);
-    }
+    return $this->response->setJSON(['success' => true]);
+  }
 
-    return response(['success' => true]);
+  private function resizeProfileImage (string $path) {
+    $image = \Config\Services::image()
+      ->withFile($path)
+      ->resize(300, 300, true, 'height')
+      ->save($path);
   }
 }
