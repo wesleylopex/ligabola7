@@ -41,7 +41,7 @@
                 <i class="w-4 h-4" data-feather="camera"></i>
               </button>
               <div class="input-file__open w-full h-full relative rounded-md">
-                <img class="input-file__preview w-full h-full object-cover rounded-md border border-gray-200" src="<?= base_url("uploads/images/teams/$team->image") ?>" alt="">
+                <img class="input-file__preview w-full h-full object-cover rounded-md border border-gray-200" src="<?= isset($team) ? base_url("uploads/images/teams/$team->image") : '' ?>" alt="">
                 <span class="transition-opacity duration-500 opacity-0 group-hover:opacity-100 top-0 rounded-md w-full h-full absolute bg-black bg-opacity-60 flex items-center justify-center text-xs font-medium text-white">Alterar</span>
               </div>
             </div>

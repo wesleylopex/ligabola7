@@ -643,32 +643,24 @@ small {
   bottom: -5rem;
 }
 
-.bottom-0 {
-  bottom: 0px;
+.bottom-2 {
+  bottom: 0.5rem;
 }
 
 .left-0 {
   left: 0px;
 }
 
-.right-0 {
-  right: 0px;
-}
-
 .right-10 {
   right: 2.5rem;
 }
 
-.top-0 {
-  top: 0px;
-}
-
-.bottom-2 {
-  bottom: 0.5rem;
-}
-
 .right-2 {
   right: 0.5rem;
+}
+
+.top-0 {
+  top: 0px;
 }
 
 .z-10 {
@@ -758,6 +750,10 @@ small {
   display: none;
 }
 
+.h-24 {
+  height: 6rem;
+}
+
 .h-32 {
   height: 8rem;
 }
@@ -784,6 +780,10 @@ small {
 
 .h-screen {
   height: 100vh;
+}
+
+.h-10 {
+  height: 2.5rem;
 }
 
 .min-h-screen {
@@ -846,6 +846,10 @@ small {
   max-width: 20rem;
 }
 
+.max-w-xl {
+  max-width: 36rem;
+}
+
 .flex-shrink-0 {
   flex-shrink: 0;
 }
@@ -882,6 +886,10 @@ small {
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
+.grid-cols-12 {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
 .flex-col {
   flex-direction: column;
 }
@@ -904,6 +912,10 @@ small {
 
 .justify-between {
   justify-content: space-between;
+}
+
+.gap-12 {
+  gap: 3rem;
 }
 
 .gap-2 {
@@ -976,10 +988,6 @@ small {
   border-width: 2px;
 }
 
-.border-4 {
-  border-width: 4px;
-}
-
 .border-l-8 {
   border-left-width: 8px;
 }
@@ -992,11 +1000,6 @@ small {
 .border-gray-200 {
   --tw-border-opacity: 1;
   border-color: rgb(229 231 235 / var(--tw-border-opacity));
-}
-
-.border-white {
-  --tw-border-opacity: 1;
-  border-color: rgb(255 255 255 / var(--tw-border-opacity));
 }
 
 .bg-black {
@@ -1096,6 +1099,11 @@ small {
   background-repeat: no-repeat;
 }
 
+.object-contain {
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+
 .object-cover {
   -o-object-fit: cover;
      object-fit: cover;
@@ -1107,6 +1115,10 @@ small {
 
 .p-1 {
   padding: 0.25rem;
+}
+
+.p-12 {
+  padding: 3rem;
 }
 
 .p-2 {
@@ -1127,6 +1139,10 @@ small {
 
 .p-8 {
   padding: 2rem;
+}
+
+.p-10 {
+  padding: 2.5rem;
 }
 
 .px-10 {
@@ -1194,6 +1210,11 @@ small {
 .text-base {
   font-size: 1rem;
   line-height: 1.5rem;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
 }
 
 .text-sm {

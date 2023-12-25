@@ -8,10 +8,11 @@ use App\Models\ChampionshipModel;
 use App\Models\DivisionModel;
 use App\Models\MemberModel;
 use App\Models\TeamModel;
+use App\Models\TeamDivisionModel;
 
 class Championships extends BaseController {
   public function create () {
-    return view('admin/championship/form');
+    return view('admin/championships/form');
   }
 
   public function save () {
@@ -67,7 +68,7 @@ class Championships extends BaseController {
     $divisionModel = new DivisionModel();
     $divisions = $divisionModel->where('championship_id', $championshipId)->findAll();
 
-    return view('admin/championship/index', [
+    return view('admin/championships/index', [
       'championship' => $championship,
       'divisions' => $divisions
     ]);
@@ -88,5 +89,55 @@ class Championships extends BaseController {
       'members' => $members,
       'teams' => $teams
     ]);
+  }
+
+  public function teams (int $championshipId) {
+    $championshipModel = new ChampionshipModel();
+    $championship = $championshipModel->find($championshipId);
+
+    $teamModel = new TeamModel();
+    $teams = $teamModel->orderBy('name', 'ASC')->findAll();
+
+    $divisionModel = new DivisionModel();
+    $divisions = $divisionModel->where('championship_id', $championshipId)->findAll();
+
+    $teamDivisionModel = new TeamDivisionModel();
+    $teamsDivisions = $teamDivisionModel->findAll();
+
+    return view('admin/championships/teams', [
+      'championship' => $championship,
+      'teams' => $teams,
+      'divisions' => $divisions,
+      'teamsDivisions' => $teamsDivisions
+    ]);
+  }
+
+  public function saveTeamsDivisions () {
+    $validationRules = [
+      'teamsDivisions' => 'required'
+    ];
+
+    if (!$this->validate($validationRules)) {
+      return $this->response->setJSON([
+        'success' => false,
+        'error' => $this->validator->getErrors(),
+      ]);
+    }
+
+    $teamDivisionModel = new TeamDivisionModel();
+
+    $teamsDivisions = json_decode($this->request->getPost('teamsDivisions'));
+
+    foreach ($teamsDivisions as $teamDivision) {
+      $teamDivisionModel->save($teamDivision);
+    }
+
+    $deletedTeamsDivisions = json_decode($this->request->getPost('deletedTeamsDivisions'));
+
+    foreach ($deletedTeamsDivisions as $teamDivision) {
+      $teamDivisionModel->delete($teamDivision);
+    }
+
+    return $this->response->setJSON(['success' => true]);
   }
 }
