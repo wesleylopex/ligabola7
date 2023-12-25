@@ -38,6 +38,8 @@ $routes->group('admin', ['filter' => 'admin-auth'], static function ($routes) {
   $routes->get('championships/division/(:num)', 'Admin\Championships::division/$1');
   $routes->post('championships/saveTeamsDivisions', 'Admin\Championships::saveTeamsDivisions');
 
+  $routes->post('members/approve', 'Admin\Members::approve');
+
   $routes->get('teams', 'Admin\Teams::index');
   $routes->get('teams/create', 'Admin\Teams::create');
   $routes->get('teams/update/(:num)', 'Admin\Teams::update/$1');

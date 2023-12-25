@@ -79,7 +79,7 @@
                 <button @click="openDeleteConfirmationModal(member.id)" data-tippy-content="Clique para excluir" class="rounded-full p-2 font-medium hover:bg-gray-200">
                   <i class="w-4 h-4" data-feather="trash"></i>
                 </button>
-                <button @click="openApproveConfirmationModal(member.id)" v-if="member.status === 'pending'" data-tippy-content="Clique para aprovar" class="rounded-full p-2 font-medium bg-gray-200 hover:text-gray-100 hover:bg-green-500 transition-colors duration-300">
+                <button @click="openApproveConfirmationModal(member.id, member.role)" v-if="member.status === 'pending'" data-tippy-content="Clique para aprovar" class="rounded-full p-2 font-medium bg-gray-200 hover:text-gray-100 hover:bg-green-500 transition-colors duration-300">
                   <i class="w-4 h-4" data-feather="check"></i>
                 </button>
               </td>
@@ -108,14 +108,17 @@
     Vue.createApp({
       data () {
         return {
-          baseURL: pageData.baseURL,
-          members: pageData.members,
-          teams: pageData.teams,
-          division: pageData.division,
+          ...pageData,
           search: '',
           teamId: '',
           status: localStorage.getItem('status') || 'pending',
-          currentMemberToApprove: {}
+          approveInfo: {
+            subscriptionNumber: null,
+            memberId: null,
+            memberRole: null,
+            divisionId: null,
+            teamId: null,
+          },
         }
       },
       methods: {
@@ -146,30 +149,45 @@
           const form = document.querySelector('form#approve-confirmation')
           const body = new FormData(form)
 
+          setFormIsLoading(form, true)
+
           const response = await fetch(form.action, {
             method: 'POST',
             body
           }).then(response => response.json())
 
-          if (response.success !== true) {
-            return showNotification(response.error)
+          console.log(response)
+
+          if (!response.success) {
+            const [error] = Object.values(response.error)
+
+            setFormIsLoading(form, false)
+            return showNotification(error)
           }
 
-          const index = this.members.findIndex(member => Number(member.id) === Number(response.memberId))
+          setFormIsLoading(form, false)
+
+          const index = this.members.findIndex(member => Number(member.id) === Number(response.memberId) && member.role === response.memberRole)
           
           this.members[index].status = 'approved'
           this.members[index].subscription_number = response.subscriptionNumber
 
-          this.currentMemberToApprove = {}
+          this.approveInfo = {}
 
           this.runSearch()
 
           closeApproveConfirmationModal()
           showNotification('Membro aprovado com sucesso')
         },
-        openApproveConfirmationModal (memberId) {
-          const member = this.members.find(member => Number(member.id) === Number(memberId))
-          this.currentMemberToApprove = member
+        openApproveConfirmationModal (memberId, role) {
+          const member = this.members.find(member => Number(member.id) === Number(memberId) && member.role === role)
+          this.approveInfo = {
+            subscriptionNumber: member.subscription_number,
+            memberId: member.id,
+            memberRole: member.role,
+            divisionId: this.division.id,
+            teamId: member.team_id
+          }
 
           const action = `${this.baseURL}admin/members/approve`
 
