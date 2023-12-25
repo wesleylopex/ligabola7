@@ -8,7 +8,7 @@
   @apply bg-transparent outline-none w-full caret-blue-600 border border-gray-400 rounded-md p-2 text-sm;
 }
 
-input:disabled {
+input:disabled, input[readonly] {
   @apply bg-gray-100 cursor-not-allowed;
 }
 

@@ -40,6 +40,14 @@ class Members extends BaseController {
       'rg' => $this->request->getPost('rg')
     ];
 
+    $memberAlreadyExists = $memberModel->where('cpf', $member['cpf'])
+      ->orWhere('subscription_number', $member['subscription_number'])
+      ->first();
+
+    if ($memberAlreadyExists) {
+      $member['id'] = $memberAlreadyExists->id;
+    }
+
     $success = $memberModel->save($member);
 
     if (!$success) {
@@ -49,11 +57,11 @@ class Members extends BaseController {
       ]);
     }
 
-    $memberId = $memberModel->getInsertID();
+    $memberId = array_key_exists('id', $member) ? $member['id'] : $memberModel->getInsertID();
 
     $memberTeamDivision = [
       'member_id' => $memberId,
-      'team_division_id' => 1,
+      'team_division_id' => 6,
       'status' => 'pending',
       'role' => $this->request->getPost('role')
     ];

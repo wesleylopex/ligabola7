@@ -37,15 +37,15 @@
         <div class="mt-14 grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-4">
           <div class="bg-gray-50 p-4 rounded-md">
             <h2 class="text-sm">Atletas aprovados</h2>
-            <p class="mt-2 font-bold text-green-500">{{ members.filter(m => m.status === 'approved').length }}</p>
+            <p class="mt-2 font-bold text-green-500">{{ members.filter(m => m.role === 'athlete' && m.status === 'approved').length }}</p>
           </div>
           <div class="bg-gray-50 p-4 rounded-md">
             <h2 class="text-sm">Atletas pendentes</h2>
-            <p class="mt-2 font-bold text-orange-400">{{ members.filter(m => m.status === 'pending').length }}</p>
+            <p class="mt-2 font-bold text-orange-400">{{ members.filter(m => m.role === 'athlete' && m.status === 'pending').length }}</p>
           </div>
           <div class="bg-gray-50 p-4 rounded-md">
             <h2 class="text-sm">Atletas reprovados</h2>
-            <p class="mt-2 font-bold text-red-500">{{ members.filter(m => m.status === 'denied').length }}</p>
+            <p class="mt-2 font-bold text-red-500">{{ members.filter(m => m.role === 'athlete' && m.status === 'denied').length }}</p>
           </div>
         </div>
         <table class="mt-14 block md:table overflow-x-auto w-full text-left font-normal text-[#4A4251] text-sm">

@@ -7,7 +7,7 @@
   <main class="py-10 md:py-20">
     <header class="max-w-screen-2xl mx-auto px-10 md:px-20 2xl:px-10">
       <button onclick="history.back()" class="p-2 rounded-full bg-gray-200" data-tippy-content="Voltar">
-        <i class="w-5 h-5 text-gray-500" data-feather="arrow-left"></i>
+        <i class="w-4 h-4 text-gray-500" data-feather="chevron-left"></i>
       </button>
       <h1 class="mt-10 text-3xl font-bold text-gray-100">{{ member.id ? 'Editar membro' : 'Cadastrar novo membro' }}</h1>
     </header>
@@ -123,7 +123,7 @@
             }
 
             input.value = response.member[name]
-            input.disabled = input.value
+            input.readOnly = input.value
           })
 
           const findType = isUsingCPF ? 'CPF' : 'número de inscrição'
@@ -146,6 +146,8 @@
             method: 'POST',
             body
           }).then(response => response.json())
+
+          console.log(response)
 
           if (!response.success) {
             const [error] = Object.values(response.error)
@@ -172,7 +174,7 @@
               return
             }
 
-            input.disabled = false
+            input.readOnly = false
           })
         },
         setIsFindingMember (bool) {

@@ -11,7 +11,7 @@ class Home extends BaseController {
     $memberModel = new MemberModel();
 
     $teamId = $this->currentTeam->id;
-    $championshipId = 1;
+    $championshipId = 11;
 
     $members = $memberModel->getMembers($teamId, $championshipId);
 
