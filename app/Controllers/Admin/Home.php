@@ -9,7 +9,7 @@ use App\Models\ChampionshipModel;
 class Home extends BaseController {
   public function index () {
     $championshipModel = new ChampionshipModel();
-    $championships = $championshipModel->findAll();
+    $championships = $championshipModel->orderBy('created_at', 'DESC')->findAll();
 
     return view('admin/home/index', [
       'championships' => $championships

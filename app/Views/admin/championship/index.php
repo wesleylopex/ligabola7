@@ -25,7 +25,7 @@
       </a>
       <a v-for="division of divisions" :href="`${baseURL}admin/championships/division/${division.id}`">
         <div class="w-full flex flex-col items-center rounded-md bg-white p-6 shadow-md">
-          <div class="p-2 rounded-full" :style="{ 'background-color': division.color }">
+          <div class="p-2 rounded-full" :class="division.color">
             <i class="w-5 h-5 text-gray-100" data-feather="award"></i>
           </div>
           <h2 class="my-2 text-gray-600 font-semibold text-sm">{{ division.name }}</h2>
