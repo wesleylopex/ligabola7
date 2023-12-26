@@ -28,12 +28,26 @@ class Members extends BaseController {
       ]);
     }
 
+    $memberTeamDivisionModel = new MemberTeamDivisionModel();
+
+    $limitExceed = $memberTeamDivisionModel->where([
+      'role' => 'athlete',
+      'team_division_id' => 6,
+      'status' => 'approved'
+    ])->countAllResults() >= 23;
+
+    $memberRole = $this->request->getPost('role');
+
+    if ($memberRole === 'athlete' && $limitExceed) {
+      return $this->response->setJSON([
+        'success' => false,
+        'error' => 'Limite de atletas excedido'
+      ]);
+    }
+
     $memberModel = new MemberModel();
 
-    $subscriptionNumber = $this->request->getPost('subscription_number');
-
     $member = [
-      'subscription_number' => empty($subscriptionNumber) ? null : $subscriptionNumber,
       'name' => $this->request->getPost('name'),
       'birth_date' => $this->request->getPost('birth_date'),
       'cpf' => $this->request->getPost('cpf'),
@@ -41,7 +55,6 @@ class Members extends BaseController {
     ];
 
     $memberAlreadyExists = $memberModel->where('cpf', $member['cpf'])
-      ->orWhere('subscription_number', $member['subscription_number'])
       ->first();
 
     if ($memberAlreadyExists) {
@@ -63,21 +76,19 @@ class Members extends BaseController {
       'member_id' => $memberId,
       'team_division_id' => 6,
       'status' => 'pending',
-      'role' => $this->request->getPost('role')
+      'role' => $memberRole
     ];
 
-    $memberTeamDivisionModel = new MemberTeamDivisionModel();
     $success = $memberTeamDivisionModel->save($memberTeamDivision);
 
     return $this->response->setJSON(['success' => true]);
   }
 
   public function find () {
-    $query = $this->request->getGet('query');
+    $cpf = $this->request->getGet('cpf');
 
     $memberModel = new MemberModel();
-    $member = $memberModel->where('cpf', $query)
-      ->orWhere('subscription_number', $query)
+    $member = $memberModel->where('cpf', $cpf)
       ->first();
 
     if (!$member) {

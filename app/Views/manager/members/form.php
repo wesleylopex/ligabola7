@@ -23,11 +23,6 @@
             <label for="" class="error"></label>
           </div>
           <div class="lg:col-span-4">
-            <label for="" class="text-xs text-gray-800">Número de inscrição</label>
-            <input type="text" name="subscription_number" @blur="findMember()" :value="member.subscription_number" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
-            <label for="" class="error"></label>
-          </div>
-          <div class="lg:col-span-4">
             <label for="" class="text-xs text-gray-800">Nome completo</label>
             <input type="text" required name="name" :value="member.name" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
             <label for="" class="error"></label>
@@ -90,20 +85,14 @@
       methods: {
         async findMember () {
           const cpf = document.querySelector('input[name="cpf"]').value
-          const subscriptionNumber = document.querySelector('input[name="subscription_number"]').value
 
-          const isUsingCPF = cpf && cpf.length === 14
-          const isUsingSubscriptionNumber = subscriptionNumber
-
-          if (!isUsingCPF && !isUsingSubscriptionNumber) {
+          if (!cpf || cpf.length !== 14) {
             return
           }
 
-          const query = isUsingCPF ? cpf : subscriptionNumber
-
           this.setIsFindingMember(true)
 
-          const response = await fetch(`${this.baseURL}manager/members/find?query=${query}`, {
+          const response = await fetch(`${this.baseURL}manager/members/find?cpf=${cpf}`, {
             method: 'GET'
           }).then(response => response.json())
 
@@ -113,7 +102,7 @@
             return false
           }
 
-          const inputs = ['cpf', 'subscription_number', 'name', 'rg', 'birth_date']
+          const inputs = ['cpf', 'name', 'rg', 'birth_date']
 
           inputs.forEach(name => {
             const input = document.querySelector(`input[name="${name}"]`)
@@ -126,9 +115,7 @@
             input.readOnly = input.value
           })
 
-          const findType = isUsingCPF ? 'CPF' : 'número de inscrição'
-
-          showNotification(`Os dados do atleta vinculado à esse ${findType} foram automaticamente completados.`)
+          showNotification(`Os dados do atleta vinculado à esse CPF foram automaticamente completados.`)
         },
         async onFormSubmit () {
           const form = document.querySelector('form')
@@ -150,7 +137,9 @@
           console.log(response)
 
           if (!response.success) {
-            const [error] = Object.values(response.error)
+            const error = typeof response.error === 'string'
+              ? response.error
+              : Object.values(response.error)[0]
 
             setFormIsLoading(form, false)
             return showNotification(error)
@@ -165,7 +154,7 @@
 
           form.reset()
 
-          const inputs = ['cpf', 'subscription_number', 'name', 'rg', 'birth_date']
+          const inputs = ['cpf', 'name', 'rg', 'birth_date']
 
           inputs.forEach(name => {
             const input = document.querySelector(`input[name="${name}"]`)
