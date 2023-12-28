@@ -225,7 +225,7 @@
           const divisionName = this.division.id ? ('-' + this.division.name.toLowerCase()) : ''
 
           downloadLinkElement.setAttribute('href', encodedUri)
-          downloadLinkElement.setAttribute('download', `membros${divisionName}-${getCurrentDate()}.csv`)
+          downloadLinkElement.setAttribute('download', `membros${divisionName}-${this.getCurrentDate()}.csv`)
 
           document.body.appendChild(downloadLinkElement)
 
