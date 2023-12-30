@@ -79,7 +79,7 @@
                 <button @click="openDeleteConfirmationModal(member.id)" data-tippy-content="Clique para excluir" class="rounded-full p-2 font-medium hover:bg-gray-200">
                   <i class="w-4 h-4" data-feather="trash"></i>
                 </button>
-                <button @click="openApproveConfirmationModal(member.id, member.role)" v-if="member.status === 'pending'" data-tippy-content="Clique para aprovar" class="rounded-full p-2 font-medium bg-gray-200 hover:text-gray-100 hover:bg-green-500 transition-colors duration-300">
+                <button @click="openApproveConfirmationModal(member.id)" v-if="member.status === 'pending'" data-tippy-content="Clique para aprovar" class="rounded-full p-2 font-medium bg-gray-200 hover:text-gray-100 hover:bg-green-500 transition-colors duration-300">
                   <i class="w-4 h-4" data-feather="check"></i>
                 </button>
               </td>
@@ -113,11 +113,8 @@
           teamId: '',
           status: localStorage.getItem('status') || 'pending',
           approveInfo: {
-            subscriptionNumber: null,
-            memberId: null,
-            memberRole: null,
-            divisionId: null,
-            teamId: null,
+            id: null,
+            subscription_number: null
           },
         }
       },
@@ -156,21 +153,33 @@
             body
           }).then(response => response.json())
 
-          console.log(response)
+          setFormIsLoading(form, false)
 
           if (!response.success) {
-            const [error] = Object.values(response.error)
+            const error = typeof response.error === 'string'
+              ? response.error
+              : Object.values(response.error)[0]
 
-            setFormIsLoading(form, false)
             return showNotification(error)
           }
 
-          setFormIsLoading(form, false)
+          const memberTeamDivisionId = Number(response.id)
+          const index = this.members.findIndex(member => Number(member.id) === memberTeamDivisionId)
 
-          const index = this.members.findIndex(member => Number(member.id) === Number(response.memberId) && member.role === response.memberRole)
-          
+          if (index === -1) {
+            return showNotification('Não foi possível encontrar o membro')
+          }
+
           this.members[index].status = 'approved'
-          this.members[index].subscription_number = response.subscriptionNumber
+
+          const memberId = this.members[index].member_id
+          const subscriptionNumber = body.get('subscription_number')
+
+          this.members.forEach(member => {
+            if (Number(member.member_id) === Number(memberId)) {
+              member.subscription_number = subscriptionNumber
+            }
+          })
 
           this.approveInfo = {}
 
@@ -179,14 +188,12 @@
           closeApproveConfirmationModal()
           showNotification('Membro aprovado com sucesso')
         },
-        openApproveConfirmationModal (memberId, role) {
-          const member = this.members.find(member => Number(member.id) === Number(memberId) && member.role === role)
+        openApproveConfirmationModal (id) {
+          const member = this.members.find(memberTeamDivision => Number(memberTeamDivision.id) === Number(id))
+
           this.approveInfo = {
-            subscriptionNumber: member.subscription_number,
-            memberId: member.id,
-            memberRole: member.role,
-            divisionId: this.division.id,
-            teamId: member.team_id
+            id: member.id,
+            subscription_number: member.subscription_number
           }
 
           const action = `${this.baseURL}admin/members/approve`

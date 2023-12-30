@@ -31,7 +31,7 @@ class Members extends BaseController {
     $this->load->view('admin/team-members/index', $this->data);
   }
 
-  public function update (int $memberId) {
+  public function update (int $memberTeamDivisionId) {
     $this->load->model('TeamMemberModel');
     $this->data['member'] = $member = $this->TeamMemberModel->getByPrimary($memberId);
 
@@ -42,11 +42,17 @@ class Members extends BaseController {
     $this->load->view('admin/team-members/form', $this->data);
   }
 
-  public function delete (int $memberId) {
-    $this->load->model('TeamMemberModel');
-    $this->TeamMemberModel->delete($memberId);
+  public function delete (int $memberTeamDivisionId) {
+    $memberTeamDivisionModel = new MemberTeamDivisionModel();
+    $memberTeamDivision = $memberTeamDivisionModel->where('id', $memberTeamDivisionId)->first();
 
-    return response(['success' => true, 'memberId' => $memberId]);
+    if (!$memberTeamDivision) {
+      return $this->response->setJSON(['success' => false, 'error' => 'Não foi possível encontrar o membro do time']);
+    }
+
+    $memberTeamDivisionModel->delete($memberTeamDivisionId);
+
+    return response(['success' => true]);
   }
 
   public function save () {
@@ -63,12 +69,14 @@ class Members extends BaseController {
       return response(['success' => false, 'error' => strip_tags(validation_errors())]);
     }
 
+    $rg = $this->request->getPost('rg');
+
     $member = [
       'id' => $this->request->getPost('id'),
       'name' => $this->request->getPost('name'),
       'subscription_number' => $this->request->getPost('subscription_number'),
       'cpf' => $this->request->getPost('cpf'),
-      'rg' => $this->request->getPost('rg'),
+      'rg' => empty($rg) ? null : $rg,
       'birth_date' => $this->request->getPost('birth_date'),
       'type' => $this->request->getPost('type'),
       'status' => $this->request->getPost('status'),
@@ -91,9 +99,7 @@ class Members extends BaseController {
 
   public function approve () {
     $validationRules = [
-      'member_id' => 'required',
-      'team_id' => 'required',
-      'division_id' => 'required',
+      'id' => 'required|is_natural_no_zero',
       'subscription_number' => 'permit_empty|max_length[255]',
     ];
 
@@ -103,23 +109,11 @@ class Members extends BaseController {
         'error' => $this->validator->getErrors(),
       ]);
     }
-    
-    $teamDivisionModel = new TeamDivisionModel();
-    $teamDivision = $teamDivisionModel->where([
-      'team_id' => $this->request->getPost('team_id'),
-      'division_id' => $this->request->getPost('division_id')
-    ])->first();
-
-    if (!$teamDivision) {
-      return $this->response->setJSON(['success' => false, 'error' => 'Não foi possível encontrar a divisão do time']);
-    }
 
     $memberTeamDivisionModel = new MemberTeamDivisionModel();
     $memberTeamDivision = $memberTeamDivisionModel->where([
-      'member_id' => $this->request->getPost('member_id'),
-      'team_division_id' => $teamDivision->id,
-      'role' => $this->request->getPost('member_role')
-    ])->first();
+      'id' => $this->request->getPost('id'),
+    ])->first(); 
 
     if (!$memberTeamDivision) {
       return $this->response->setJSON(['success' => false, 'error' => 'Não foi possível encontrar o membro do time']);
@@ -132,17 +126,17 @@ class Members extends BaseController {
 
     $subscriptionNumber = $this->request->getPost('subscription_number');
 
-    $memberModel = new MemberModel();
-    $memberModel->save([
-      'id' => $this->request->getPost('member_id'),
-      'subscription_number' => empty($subscriptionNumber) ? null : $subscriptionNumber
-    ]);
+    if (!empty($subscriptionNumber)) {
+      $memberModel = new MemberModel();
+
+      $memberModel->update($memberTeamDivision->member_id, [
+        'subscription_number' => $subscriptionNumber
+      ]);
+    }
 
     return $this->response->setJSON([
       'success' => true,
-      'memberId' => $this->request->getPost('member_id'),
-      'memberRole' => $this->request->getPost('member_role'),
-      'teamId' => $this->request->getPost('team_id')
+      'id' => $memberTeamDivision->id,
     ]);
   }
 }

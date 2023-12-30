@@ -67,12 +67,21 @@ class MemberModel extends Model {
     $members = $db
       ->table('members_teams_divisions')
       ->select('
-        members.*,
+        members.id as member_id,
+        members.name,
+        members.cpf,
+        members.subscription_number,
+        members.rg,
+        members.birth_date,
+
+        members_teams_divisions.id,
         members_teams_divisions.role as role,
         members_teams_divisions.status as status,
         members_teams_divisions.denied_reason as denied_reason,
+        members_teams_divisions.created_at as created_at,
+
         teams.id as team_id,
-        teams.name as team_name
+        teams.name as team_name,
       ')
       ->join('members', 'members_teams_divisions.member_id = members.id')
       ->join('teams_divisions', 'members_teams_divisions.team_division_id = teams_divisions.id')

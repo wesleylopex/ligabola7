@@ -10,10 +10,7 @@
     </div>
     <form id="approve-confirmation" @submit.prevent="approveRecord()" action="<?= base_url('admin/members/approve') ?>" method="POST" class="mt-8">
       <?= csrf_field() ?>
-      <input type="hidden" name="member_id" :value="approveInfo.memberId">
-      <input type="hidden" name="member_role" :value="approveInfo.memberRole">
-      <input type="hidden" name="team_id" :value="approveInfo.teamId">
-      <input type="hidden" name="division_id" :value="division.id">
+      <input type="hidden" name="id" :value="approveInfo.id">
       <div>
         <label for="" class="text-xs text-gray-800">Número de inscrição</label>
         <input type="text" :value="approveInfo.subscription_number" name="subscription_number" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">

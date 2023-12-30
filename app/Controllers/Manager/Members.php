@@ -51,7 +51,7 @@ class Members extends BaseController {
       'name' => $this->request->getPost('name'),
       'birth_date' => $this->request->getPost('birth_date'),
       'cpf' => $this->request->getPost('cpf'),
-      'rg' => $this->request->getPost('rg')
+      'rg' => $this->request->getPost('rg') || null
     ];
 
     $memberAlreadyExists = $memberModel->where('cpf', $member['cpf'])
