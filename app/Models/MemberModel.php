@@ -86,7 +86,7 @@ class MemberModel extends Model {
       ->join('members', 'members_teams_divisions.member_id = members.id')
       ->join('teams_divisions', 'members_teams_divisions.team_division_id = teams_divisions.id')
       ->join('teams', 'teams_divisions.team_id = teams.id')
-      ->where('members_teams_divisions.team_division_id', $divisionId)
+      ->where('teams_divisions.division_id', $divisionId)
       ->get()
       ->getResult();
 
