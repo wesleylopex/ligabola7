@@ -9,6 +9,7 @@
       </button>
     </div>
     <form id="delete-confirmation" @submit.prevent="deleteRecord()" action="" method="POST" class="mt-8">
+      <?= csrf_field() ?>
       <p class="text-sm text-gray-600">Após a exclusão deste registro não será possível recuperá-lo</p>
       <div class="mt-8 flex justify-end">
         <button type="submit" data-loader=".feather-loader" class="flex items-center justify-center text-sm py-2 px-4 rounded-sm font-medium bg-blue-600 text-white">

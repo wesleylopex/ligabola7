@@ -42,7 +42,7 @@ class Members extends BaseController {
     $this->load->view('admin/team-members/form', $this->data);
   }
 
-  public function delete (int $memberTeamDivisionId) {
+  public function deleteMTD (int $memberTeamDivisionId) {
     $memberTeamDivisionModel = new MemberTeamDivisionModel();
     $memberTeamDivision = $memberTeamDivisionModel->where('id', $memberTeamDivisionId)->first();
 
@@ -52,7 +52,7 @@ class Members extends BaseController {
 
     $memberTeamDivisionModel->delete($memberTeamDivisionId);
 
-    return response(['success' => true]);
+    return $this->response->setJSON(['success' => true, 'id' => $memberTeamDivisionId]);
   }
 
   public function save () {

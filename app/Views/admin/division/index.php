@@ -128,18 +128,24 @@
             body
           }).then(response => response.json())
 
-          if (response.success !== true) {
-            return showNotification(response.error)
+          console.log(response)
+
+          if (!response.success) {
+            const error = typeof response.error === 'string'
+              ? response.error
+              : Object.values(response.error)[0]
+
+            return showNotification(error)
           }
 
-          const index = this.members.findIndex(member => Number(member.id) === Number(response.memberId))
+          const index = this.members.findIndex(member => Number(member.id) === Number(response.id))
           this.members.splice(index, 1)
 
           closeDeleteConfirmationModal()
           showNotification('Membro excluído com sucesso')
         },
-        openDeleteConfirmationModal (memberId) {
-          const action = `${this.baseURL}admin/members/delete/${memberId}`
+        openDeleteConfirmationModal (mtdId) {
+          const action = `${this.baseURL}admin/members/deleteMTD/${mtdId}`
           openDeleteConfirmationModal(action)
         },
         async approveRecord () {
