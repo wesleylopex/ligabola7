@@ -32,7 +32,7 @@ class Members extends BaseController {
 
     $limitExceed = $memberTeamDivisionModel->where([
       'role' => 'athlete',
-      'team_division_id' => 6,
+      'team_division_id' => $this->currentTeamDivision->id,
       'status' => 'approved'
     ])->countAllResults() >= 23;
 
@@ -47,11 +47,13 @@ class Members extends BaseController {
 
     $memberModel = new MemberModel();
 
+    $rg = $this->request->getPost('rg');
+
     $member = [
       'name' => $this->request->getPost('name'),
       'birth_date' => $this->request->getPost('birth_date'),
       'cpf' => $this->request->getPost('cpf'),
-      'rg' => $this->request->getPost('rg') || null
+      'rg' => empty($rg) ? null : $rg
     ];
 
     $memberAlreadyExists = $memberModel->where('cpf', $member['cpf'])
@@ -74,7 +76,7 @@ class Members extends BaseController {
 
     $memberTeamDivision = [
       'member_id' => $memberId,
-      'team_division_id' => 6,
+      'team_division_id' => $this->currentTeamDivision->id,
       'status' => 'pending',
       'role' => $memberRole
     ];

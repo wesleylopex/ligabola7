@@ -10,6 +10,8 @@ use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
 use App\Models\TeamModel;
+use App\Models\TeamDivisionModel;
+use App\Models\DivisionModel;
 
 /**
  * Class BaseController
@@ -59,6 +61,16 @@ abstract class BaseController extends Controller
 
         $teamModel = new TeamModel();
         $this->currentTeam = $teamModel->find(session()->get('teamId'));
+
+        if (!empty(session()->get('teamId'))) {
+            $teamDivisionModel = new TeamDivisionModel();
+            $this->currentTeamDivision = $teamDivisionModel->where([
+                'team_id' => $this->currentTeam->id
+            ])->first();
+            
+            $divisionModel = new DivisionModel();
+            $this->currentDivision = $divisionModel->find($this->currentTeamDivision->division_id);
+        }
 
         // E.g.: $this->session = \Config\Services::session();
     }
