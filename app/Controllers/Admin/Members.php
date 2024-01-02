@@ -129,6 +129,18 @@ class Members extends BaseController {
     if (!empty($subscriptionNumber)) {
       $memberModel = new MemberModel();
 
+      $subscriptionNumberAlreadyExists = $memberModel->where([
+        'subscription_number' => $subscriptionNumber,
+        'id !=' => $memberTeamDivision->member_id
+      ])->first();
+
+      if ($subscriptionNumberAlreadyExists) {
+        return $this->response->setJSON([
+          'success' => false,
+          'error' => 'Já existe um atleta com esse número de inscrição'
+        ]);
+      }
+
       $memberModel->update($memberTeamDivision->member_id, [
         'subscription_number' => $subscriptionNumber
       ]);

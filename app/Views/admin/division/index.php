@@ -159,6 +159,8 @@
             body
           }).then(response => response.json())
 
+          console.log(response)
+
           setFormIsLoading(form, false)
 
           if (!response.success) {

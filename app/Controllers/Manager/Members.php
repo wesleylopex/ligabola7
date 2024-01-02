@@ -17,7 +17,7 @@ class Members extends BaseController {
   public function save () {
     $validationRules = [
       'name' => 'required',
-      'birth_date' => 'required',
+      'birth_date' => 'required|valid_date[Y-m-d]',
       'cpf' => 'required',
       'rg' => 'permit_empty',
       'role' => 'required|in_list[athlete,coach,president,assistant]'
