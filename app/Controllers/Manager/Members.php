@@ -6,6 +6,8 @@ use App\Controllers\BaseController;
 
 use App\Models\MemberModel;
 use App\Models\MemberTeamDivisionModel;
+use App\Models\TeamModel;
+use App\Models\TeamDivisionModel;
 
 class Members extends BaseController {
   public function create (): string {
@@ -61,6 +63,27 @@ class Members extends BaseController {
 
     if ($memberAlreadyExists) {
       $member['id'] = $memberAlreadyExists->id;
+
+      $ignoreMemberInAnotherTeam = $this->request->getPost('ignore_member_in_another_team');
+
+      $memberInAnotherTeam = $memberTeamDivisionModel->where([
+        'member_id' => $memberAlreadyExists->id,
+        'team_division_id !=' => $this->currentTeamDivision->id
+      ])->first();
+
+      if (!$ignoreMemberInAnotherTeam && $memberInAnotherTeam) {
+        $teamDivisionModel = new TeamDivisionModel();
+        $teamDivision = $teamDivisionModel->find($memberInAnotherTeam->team_division_id);
+
+        $teamModel = new TeamModel();
+        $team = $teamModel->find($teamDivision->team_id);
+
+        return $this->response->setJSON([
+          'success' => false,
+          'error' => 'Membro já cadastrado em outro time',
+          'memberInAnotherTeam' => $team->name
+        ]);
+      }
     }
 
     $success = $memberModel->save($member);

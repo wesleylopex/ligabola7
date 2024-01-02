@@ -1243,6 +1243,10 @@ small {
   line-height: 1.5;
 }
 
+.leading-relaxed {
+  line-height: 1.625;
+}
+
 .text-\[\#4A4251\] {
   --tw-text-opacity: 1;
   color: rgb(74 66 81 / var(--tw-text-opacity));

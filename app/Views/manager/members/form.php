@@ -15,36 +15,48 @@
       <div class="w-full rounded-md bg-white p-6 shadow-md">
         <form @submit.prevent="onFormSubmit()" action="<?= base_url('manager/members/save') ?>" method="POST" class="grid grid-cols-1 lg:grid-cols-12 gap-4">
           <?= csrf_field() ?>
-          <input type="hidden" name="id" :value="member.id">
+          <input type="hidden" name="id" value="<?= !empty($member) ? $member->id : '' ?>">
 
           <div class="lg:col-span-4">
             <label for="" class="text-xs text-gray-800">CPF</label>
-            <input type="text" name="cpf" maxlength="14" @blur="findMember()" data-mask="000.000.000-00" :value="member.cpf" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
+            <input type="text" name="cpf" maxlength="14" @blur="findMember()" data-mask="000.000.000-00" value="<?= !empty($member) ? $member->cpf : '' ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
             <label for="" class="error"></label>
           </div>
           <div class="lg:col-span-4">
             <label for="" class="text-xs text-gray-800">Nome completo</label>
-            <input type="text" required name="name" :value="member.name" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
+            <input type="text" required name="name" value="<?= !empty($member) ? $member->name : '' ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
             <label for="" class="error"></label>
           </div>
           <div class="lg:col-span-4">
             <label for="" class="text-xs text-gray-800">RG</label>
-            <input type="text" name="rg" :value="member.rg" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
+            <input type="text" name="rg" value="<?= !empty($member) ? $member->rg : '' ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
             <label for="" class="error"></label>
           </div>
           <div class="lg:col-span-4">
             <label for="" class="text-xs text-gray-800">Data de nascimento</label>
-            <input type="date" name="birth_date" :value="member.birth_date" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
+            <input type="date" name="birth_date" value="<?= !empty($member) ? $member->birth_date : '' ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
             <label for="" class="error"></label>
           </div>
           <div class="lg:col-span-4">
             <label for="role" class="text-xs text-gray-800">Tipo de membro</label>
             <select name="role" required id="role" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
               <option value=""></option>
-              <option value="athlete" :selected="member.role === 'athlete'">Atleta</option>
-              <option value="coach" :selected="member.role === 'coach'">Treinador</option>
-              <option value="assistant" :selected="member.role === 'assistant'">Auxiliar</option>
-              <option value="president" :selected="member.role === 'president'">Presidente / Representante legal</option>
+              <option
+                value="athlete"
+                <?= !empty($member) && $member->role === 'athlete' ? 'selected' : '' ?>
+              >Atleta</option>
+              <option
+                value="coach"
+                <?= !empty($member) && $member->role === 'coach' ? 'selected' : '' ?>
+              >Treinador</option>
+              <option
+                value="assistant"
+                <?= !empty($member) && $member->role === 'assistant' ? 'selected' : '' ?>
+              >Auxiliar</option>
+              <option
+                value="president"
+                <?= !empty($member) && $member->role === 'president' ? 'selected' : '' ?>
+              >Presidente / Representante legal</option>
             </select>
             <label for="" class="error"></label>
           </div>
@@ -65,6 +77,9 @@
     <div id="is-finding-member" class="hidden fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-40 text-white grid place-items-center">
       <i class="w-8 h-8 animate-spin" data-feather="loader"></i>
     </div>
+
+    <!-- Scripts -->
+    <?= view('manager/members/member-in-another-team-modal') ?>
   </main>
 
   <!-- Scripts -->
@@ -79,7 +94,9 @@
     Vue.createApp({
       data () {
         return {
-          ...pageData
+          ...pageData,
+          memberInAnotherTeam: null,
+          ignoreMemberInAnotherTeam: false
         }
       },
       methods: {
@@ -121,6 +138,10 @@
           const form = document.querySelector('form')
           const body = new FormData(form)
           
+          if (this.ignoreMemberInAnotherTeam) {
+            body.append('ignore_member_in_another_team', true)
+          }
+
           const cpfValid = isCPFValid(body.get('cpf'))
 
           if (!cpfValid) {
@@ -134,7 +155,13 @@
             body
           }).then(response => response.json())
 
-          console.log(response)
+          if (response.memberInAnotherTeam) {
+            this.memberInAnotherTeam = response.memberInAnotherTeam
+
+            setFormIsLoading(form, false)
+
+            return openMemberInAnotherTeamModal()
+          }
 
           if (!response.success) {
             const error = typeof response.error === 'string'
@@ -169,8 +196,17 @@
         setIsFindingMember (bool) {
           document.querySelector('#is-finding-member').classList.toggle('hidden', !bool)
         }
+      },
+      watch: {
+        ignoreMemberInAnotherTeam (value) {
+          console.log(value)
+          if (value === true) {
+            closeMemberInAnotherTeamModal()
+            this.onFormSubmit()
+          }
+        }
       }
-    }).mount('body')
+    }).mount('main')
   </script>
 </body>
 </html>
