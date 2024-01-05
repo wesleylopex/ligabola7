@@ -31,17 +31,6 @@ class Members extends BaseController {
     $this->load->view('admin/team-members/index', $this->data);
   }
 
-  public function update (int $memberTeamDivisionId) {
-    $this->load->model('TeamMemberModel');
-    $this->data['member'] = $member = $this->TeamMemberModel->getByPrimary($memberId);
-
-    if (!$member) {
-      return redirect('admin');
-    }
-
-    $this->load->view('admin/team-members/form', $this->data);
-  }
-
   public function deleteMTD (int $memberTeamDivisionId) {
     $memberTeamDivisionModel = new MemberTeamDivisionModel();
     $memberTeamDivision = $memberTeamDivisionModel->where('id', $memberTeamDivisionId)->first();
@@ -55,46 +44,78 @@ class Members extends BaseController {
     return $this->response->setJSON(['success' => true, 'id' => $memberTeamDivisionId]);
   }
 
-  public function save () {
-    $this->form_validation->set_rules('id', 'ID', 'trim|is_natural_no_zero');
-    $this->form_validation->set_rules('name', 'Nome', 'trim|max_length[255]');
-    $this->form_validation->set_rules('subscription_number', 'Número de inscrição', 'trim|max_length[255]');
-    $this->form_validation->set_rules('cpf', 'CPF', 'trim|max_length[255]');
-    $this->form_validation->set_rules('rg', 'RG', 'trim|max_length[255]');
-    $this->form_validation->set_rules('birth_date', 'Data de nascimento', 'trim|max_length[255]');
-    $this->form_validation->set_rules('type', 'Tipo de membro', 'trim|in_list[athlete,coach,assistant,president]');
-    $this->form_validation->set_rules('status', 'Status', 'trim|in_list[pending,approved,denied]');
+  public function update (int $mtdId) {
+    $memberTeamDivisionModel = new MemberTeamDivisionModel();
+    $memberTeamDivision = $memberTeamDivisionModel->where('id', $mtdId)->first();
 
-    if ($this->form_validation->run() !== true) {
-      return response(['success' => false, 'error' => strip_tags(validation_errors())]);
+    if (!$memberTeamDivision) {
+      return redirect()->back();
+    }
+
+    $memberModel = new MemberModel();
+    $member = $memberModel->where('id', $memberTeamDivision->member_id)->first();
+
+    if (!$member) {
+      return redirect()->back();
+    }
+
+    return view('admin/members/form', [
+      'member' => $member,
+      'mtd' => $memberTeamDivision,
+    ]);
+  }
+
+  public function save () {
+    $validationRules = [
+      'member_id' => 'trim|required|is_natural_no_zero',
+      'mtd_id' => 'trim|required|is_natural_no_zero',
+      'name' => 'trim|max_length[255]',
+      'subscription_number' => 'trim|max_length[255]',
+      'cpf' => 'trim|max_length[255]',
+      'rg' => 'trim|permit_empty|max_length[255]',
+      'birth_date' => 'trim|max_length[255]',
+      'role' => 'trim|in_list[athlete,coach,assistant,president]',
+      'status' => 'trim|in_list[pending,approved,denied]',
+      'denied_reason' => 'trim|permit_empty|max_length[255]',
+    ];
+
+    if (!$this->validate($validationRules)) {
+      return $this->response->setJSON([
+        'success' => false,
+        'error' => $this->validator->getErrors(),
+      ]);
     }
 
     $rg = $this->request->getPost('rg');
 
     $member = [
-      'id' => $this->request->getPost('id'),
+      'id' => $this->request->getPost('member_id'),
       'name' => $this->request->getPost('name'),
       'subscription_number' => $this->request->getPost('subscription_number'),
       'cpf' => $this->request->getPost('cpf'),
       'rg' => empty($rg) ? null : $rg,
       'birth_date' => $this->request->getPost('birth_date'),
-      'type' => $this->request->getPost('type'),
-      'status' => $this->request->getPost('status'),
-      'denied_reason' => $this->request->getPost('denied_reason')
     ];
 
-    if ($member['status'] !== 'denied') {
-      $member['denied_reason'] = null;
+    $memberModel = new MemberModel();
+    $memberModel->save($member);
+
+    $memberTeamDivision = [
+      'id' => $this->request->getPost('mtd_id'),
+      'member_id' => $member['id'],
+      'role' => $this->request->getPost('role'),
+      'status' => $this->request->getPost('status'),
+      'denied_reason' => $this->request->getPost('denied_reason'),
+    ];
+
+    if ($memberTeamDivision['status'] !== 'denied') {
+      $memberTeamDivision['denied_reason'] = null;
     }
 
-    $this->load->model('TeamMemberModel');
-    $saved = $this->TeamMemberModel->save($member);
+    $memberTeamDivisionModel = new MemberTeamDivisionModel();
+    $memberTeamDivisionModel->save($memberTeamDivision);
 
-    if (!$saved) {
-      return response(['success' => false, 'error' => 'Não foi possível salvar o membro']);
-    }
-
-    return response(['success' => true]);
+    return $this->response->setJSON(['success' => true]);
   }
 
   public function approve () {
