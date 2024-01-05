@@ -6,9 +6,11 @@
 <body class="min-h-screen w-screen overflow-x-hidden bg-cover bg-center bg-no-repeat bg-fixed" style="background-image: url(<?= base_url('images/default-bg.png') ?>)">
   <main id="app" class="my-10 md:my-20">
     <header class="max-w-screen-2xl mx-auto px-10 md:px-20 2xl:px-10">
-      <button onclick="history.back()" class="p-2 rounded-full bg-gray-100" data-tippy-content="Voltar">
-        <i class="w-4 h-4 text-gray-500" data-feather="chevron-left"></i>
-      </button>
+      <a href="<?= base_url('admin/championships/' . $division->championship_id) ?>">
+        <button class="p-2 rounded-full bg-gray-100" data-tippy-content="Voltar">
+          <i class="w-4 h-4 text-gray-500" data-feather="chevron-left"></i>
+        </button>
+      </a>
       <h1 class="mt-10 text-3xl font-bold text-gray-100">Membros {{ division.id ? 'da ' + division.name : '' }}</h1>
     </header>
     <section class="mt-10 max-w-screen-2xl mx-auto px-10 md:px-20 2xl:px-10">
