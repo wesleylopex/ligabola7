@@ -32,8 +32,10 @@ $routes->group('admin', ['filter' => 'admin-auth'], static function ($routes) {
 
   $routes->get('championships/create', 'Admin\Championships::create');
   $routes->post('championships/save', 'Admin\Championships::save');
-  
+
   $routes->get('championships/(:num)', 'Admin\Championships::divisions/$1');
+  $routes->get('championships/settings/(:num)', 'Admin\Championships::settings/$1');
+  $routes->post('championships/saveSettings', 'Admin\Championships::saveSettings');
   $routes->get('championships/teams/(:num)', 'Admin\Championships::teams/$1');
   $routes->get('championships/division/(:num)', 'Admin\Championships::division/$1');
   $routes->post('championships/saveTeamsDivisions', 'Admin\Championships::saveTeamsDivisions');

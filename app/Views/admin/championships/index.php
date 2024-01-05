@@ -32,7 +32,7 @@
           <p class="text-gray-400 text-center text-xs">Clique para visulizar os membros da {{ division.name }}</p>
         </div>
       </a>
-      <a href="<?= base_url('admin/settings') ?>">
+      <a href="<?= base_url('admin/championships/settings/' . $championship->id) ?>">
         <div class="w-full flex flex-col items-center rounded-md bg-white p-6 shadow-md">
           <div class="p-2 bg-gray-100 rounded-full">
             <i class="w-5 h-5 text-gray-600" data-feather="settings"></i>

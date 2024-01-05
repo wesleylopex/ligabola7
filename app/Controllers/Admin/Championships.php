@@ -140,4 +140,41 @@ class Championships extends BaseController {
 
     return $this->response->setJSON(['success' => true]);
   }
+
+  public function settings (int $championshipId) {
+    $championshipModel = new ChampionshipModel();
+    $championship = $championshipModel->find($championshipId);
+
+    return view('admin/championships/settings', [
+      'championship' => $championship
+    ]);
+  }
+
+  public function saveSettings () {
+    $validationRules = [
+      'id' => 'required|is_natural_no_zero',
+      'name' => 'required',
+      'start_date' => 'required|valid_date',
+      'end_date' => 'required|valid_date'
+    ];
+
+    if (!$this->validate($validationRules)) {
+      return $this->response->setJSON([
+        'success' => false,
+        'error' => $this->validator->getErrors(),
+      ]);
+    }
+
+    $championship = [
+      'id' => $this->request->getPost('id'),
+      'name' => $this->request->getPost('name'),
+      'start_date' => $this->request->getPost('start_date'),
+      'end_date' => $this->request->getPost('end_date')
+    ];
+
+    $championshipModel = new ChampionshipModel();
+    $championshipModel->save($championship);
+
+    return $this->response->setJSON(['success' => true]);
+  }
 }
