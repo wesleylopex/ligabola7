@@ -1,7 +1,7 @@
 <div class="team-selection-modal easy-modal easy-modal--fade">
   <div class="easy-modal__content max-w-xl p-10 rounded-lg">
     <div class="flex items-center justify-between">
-      <h2 class="text-base text-gray-800 font-semibold mr-2">
+      <h2 v-if="currentDivisionId" class="text-base text-gray-800 font-semibold mr-2">
         Selecionar times para {{ divisions.find(division => Number(division.id) === currentDivisionId).name }}
       </h2>
       <button class="flex-shrink-0 close-team-selection-modal grid place-items-center p-2 rounded-full bg-black bg-opacity-10 hover:bg-opacity-20 transition">

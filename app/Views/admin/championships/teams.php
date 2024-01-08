@@ -61,7 +61,7 @@
       data () {
         return {
           ...pageData,
-          currentDivisionId: 6,
+          currentDivisionId: null,
           search: '',
           deletedTeamsDivisions: []
         }
@@ -90,8 +90,21 @@
           })
         },
         teamIsInOtherDivision (teamId, divisionId) {
-          return this.teamsDivisions.findIndex(teamDivision =>
-            Number(teamDivision.team_id) === Number(teamId) && Number(teamDivision.division_id) !== Number(divisionId)) !== -1
+          this.teamsDivisions.findIndex(teamDivision => {
+            const division = this.divisions.find(division => Number(division.id) === Number(teamDivision.division_id))
+
+            if (!division) {
+              return false
+            }
+
+            const divisionBelongsToChampionship = Number(division.championship_id) === Number(this.championship.id)
+
+            if (!divisionBelongsToChampionship) {
+              return false
+            }
+
+            return Number(teamDivision.team_id) === Number(teamId) && Number(teamDivision.division_id) !== Number(divisionId)
+          })
         },
         getTeamsByDivision (divisionId) {
           const teamDivision = this.teamsDivisions.filter(teamDivision => Number(teamDivision.division_id) === Number(divisionId))
@@ -176,8 +189,6 @@
         for (team in this.teams) {
           this.teams[team].isVisible = true
         }
-
-        console.log(this.teamsDivisions)
       }
     }).mount('body')
   </script>
