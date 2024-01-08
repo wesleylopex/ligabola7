@@ -29,9 +29,9 @@
               </div>
             </div>
             <div class="mt-4 grid place-items-center">
-              <button type="submit" data-loader=".form-loader" class="flex items-center justify-center text-sm py-2 rounded-sm font-medium shadow-xl bg-blue-600 text-white w-full md:w-3/4 mx-auto">
+              <button type="submit" data-loader=".feather-loader" class="flex items-center justify-center text-sm py-2 rounded-sm font-medium shadow-xl bg-blue-600 text-white w-full md:w-3/4 mx-auto">
                 Acessar conta
-                <i class="form-loader ml-2 rotating hidden" data-feather="loader"></i>
+                <i class="w-5 h-5 ml-2 animate-spin hidden" data-feather="loader"></i>
               </button>
             </div>
           </div>
@@ -60,17 +60,23 @@
           const form = document.querySelector('form')
           const body = new FormData(form)
 
+          setFormIsLoading(form, true)
+
           const response = await fetch(form.action, {
             method: form.method,
             body
           }).then(response => response.json())
 
           if (!response.success) {
-            const [error] = Object.values(response.error)
+            const error = typeof response.error === 'string'
+              ? response.error
+              : Object.values(response.error)[0]
 
             setFormIsLoading(form, false)
             return showNotification(error)
           }
+
+          setFormIsLoading(form, false, true)
 
           window.location.href = this.baseURL + 'admin'
         }

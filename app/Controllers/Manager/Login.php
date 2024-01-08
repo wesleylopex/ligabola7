@@ -19,11 +19,11 @@ class Login extends BaseController {
     $account = $teamModel->where('email', $email)->first();
 
     if (!$account) {
-      return redirect()->back()->withInput()->with('error', 'Email not found');
+      return $this->response->setJSON(['success' => false, 'error' => 'Dados inválidos']);
     }
 
     if (!password_verify($password, $account->password)) {
-      return redirect()->back()->withInput()->with('error', 'Password is incorrect');
+      return $this->response->setJSON(['success' => false, 'error' => 'Dados inválidos']);
     }
 
     session()->set('teamId', $account->id);
