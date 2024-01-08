@@ -91,6 +91,43 @@ class Championships extends BaseController {
     ]);
   }
 
+  public function divisionSettings (int $divisionId) {
+    $divisionModel = new DivisionModel();
+    $division = $divisionModel->find($divisionId);
+
+    return view('admin/division/settings', [
+      'division' => $division
+    ]);
+  }
+
+  public function saveDivisionsSettings () {
+    $validationRules = [
+      'id' => 'required|is_natural_no_zero',
+      'name' => 'required',
+      'subscriptions_opened' => 'required|in_list[0,1]',
+      'warning_text' => 'required'
+    ];
+
+    if (!$this->validate($validationRules)) {
+      return $this->response->setJSON([
+        'success' => false,
+        'error' => $this->validator->getErrors(),
+      ]);
+    }
+
+    $division = [
+      'id' => $this->request->getPost('id'),
+      'name' => $this->request->getPost('name'),
+      'subscriptions_opened' => $this->request->getPost('subscriptions_opened'),
+      'warning_text' => $this->request->getPost('warning_text')
+    ];
+
+    $divisionModel = new DivisionModel();
+    $divisionModel->save($division);
+
+    return $this->response->setJSON(['success' => true]);
+  }
+
   public function teams (int $championshipId) {
     $championshipModel = new ChampionshipModel();
     $championship = $championshipModel->find($championshipId);

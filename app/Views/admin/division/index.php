@@ -16,11 +16,18 @@
     <section class="mt-10 max-w-screen-2xl mx-auto px-10 md:px-20 2xl:px-10">
       <div class="w-full rounded-md bg-white p-6 shadow-md">
         <div class="lg:flex lg:justify-between">
-          <div class="lg:order-2 flex justify-end">
+          <div class="lg:order-2 flex justify-end space-x-2">
             <div>
               <button @click="downloadCSV()" data-tippy-content="Baixar membros filtrados (.CSV)" class="p-2 rounded-full bg-gray-200 text-gray-600">
                 <i class="w-4 h-4" data-feather="download"></i>
               </button>
+            </div>
+            <div>
+              <a href="<?= base_url('admin/championships/division/' . $division->id . '/settings') ?>">
+                <button data-tippy-content="Clique para configurar" class="p-2 rounded-full bg-gray-200 text-gray-600">
+                  <i class="w-4 h-4" data-feather="settings"></i>
+                </button>
+              </a>
             </div>
           </div>
           <div>

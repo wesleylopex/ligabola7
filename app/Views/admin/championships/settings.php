@@ -15,7 +15,7 @@
     </header>
     <section class="mt-10 max-w-screen-2xl mx-auto px-10 md:px-20 2xl:px-10">
       <div class="w-full rounded-md bg-white p-6 shadow-md">
-        <form @submit.prevent="onFormSubmit()" action="<?= base_url('admin/championships/saveSettings') ?>" method="POST" class="grid grid-cols-1 md:grid-cols-12 gap-4">
+        <form @submit.prevent="onFormSubmit()" action="<?= base_url('admin/championships/save-settings') ?>" method="POST" class="grid grid-cols-1 md:grid-cols-12 gap-4">
           <?= csrf_field() ?>
           <input type="hidden" name="id" value="<?= $championship->id ?>">
 
