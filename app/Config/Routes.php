@@ -50,5 +50,6 @@ $routes->group('admin', ['filter' => 'admin-auth'], static function ($routes) {
   $routes->get('teams', 'Admin\Teams::index');
   $routes->get('teams/create', 'Admin\Teams::create');
   $routes->get('teams/update/(:num)', 'Admin\Teams::update/$1');
+  $routes->post('teams/delete/(:num)', 'Admin\Teams::delete/$1');
   $routes->post('teams/save', 'Admin\Teams::save');
 });

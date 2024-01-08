@@ -34,10 +34,16 @@ class Teams extends BaseController {
   }
 
   public function delete (int $teamId) {
-    $this->load->model('TeamModel');
-    $this->TeamModel->delete($teamId);
+    $teamModel = new TeamModel();
+    $team = $teamModel->find($teamId);
 
-    return response(['success' => true, 'teamId' => $teamId]);
+    if (!$team) {
+      return $this->response->setJSON(['success' => false, 'error' => 'Time não encontrado']);
+    }
+
+    $teamModel->delete($teamId);
+
+    return $this->response->setJSON(['success' => true, 'teamId' => $teamId]);
   }
 
   public function save () {

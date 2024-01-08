@@ -100,15 +100,17 @@
             body
           }).then(response => response.json())
 
+          console.log(response)
+
           if (response.success !== true) {
-            return showNotify(response.error)
+            return showNotification(response.error)
           }
 
           const index = this.teams.findIndex(team => Number(team.id) === Number(response.teamId))
           this.teams.splice(index, 1)
 
           closeDeleteConfirmationModal()
-          showNotify('Time excluído com sucesso')
+          showNotification('Time excluído com sucesso')
         },
         openDeleteConfirmationModal (memberId) {
           const action = `${this.baseURL}admin/teams/delete/${memberId}`
