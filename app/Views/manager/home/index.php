@@ -12,10 +12,8 @@
         </button>
       </a>
       <h1 class="mt-10 text-3xl font-bold text-gray-100">Membros do <?= $currentTeam->name ?></h1>
-      <div class="p-6 rounded-md bg-white shadow-md max-w-md mt-10">
-        <p class="text-sm text-gray-500 leading-normal max-w-sm">
-          Warning
-        </p>
+      <div v-if="division.warning_text" class="p-6 rounded-md bg-white shadow-md max-w-md mt-10">
+        <p class="text-sm text-gray-500 leading-normal max-w-sm" v-html="division.warning_text"></p>
       </div>
     </header>
     <section class="mt-10 max-w-screen-2xl mx-auto px-10 md:px-20 2xl:px-10">
@@ -97,7 +95,8 @@
   <script>
     const homePageData = {
       baseURL: '<?= base_url() ?>',
-      members: <?= json_encode($members) ?>
+      members: <?= json_encode($members) ?>,
+      division: <?= json_encode($division) ?>
     }
 
     Vue.createApp({

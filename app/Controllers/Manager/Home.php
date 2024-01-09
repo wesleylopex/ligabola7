@@ -5,6 +5,7 @@ namespace App\Controllers\Manager;
 use App\Controllers\BaseController;
 
 use App\Models\MemberModel;
+use App\Models\DivisionModel;
 
 class Home extends BaseController {
   public function index (): string {
@@ -17,7 +18,8 @@ class Home extends BaseController {
 
     return view('manager/home/index', [
       'currentTeam' => $this->currentTeam,
-      'members' => $members
+      'members' => $members,
+      'division' => $this->currentDivision
     ]);
   }
 }

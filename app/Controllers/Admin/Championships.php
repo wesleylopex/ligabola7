@@ -105,7 +105,7 @@ class Championships extends BaseController {
       'id' => 'required|is_natural_no_zero',
       'name' => 'required',
       'subscriptions_opened' => 'required|in_list[0,1]',
-      'warning_text' => 'required'
+      'warning_text' => 'permit_empty'
     ];
 
     if (!$this->validate($validationRules)) {

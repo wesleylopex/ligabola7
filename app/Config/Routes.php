@@ -17,6 +17,7 @@ $routes->group('manager', ['filter' => 'auth'], static function ($routes) {
   $routes->get('home', 'Manager\Home::index');
 
   $routes->get('members/create', 'Manager\Members::create');
+  $routes->get('members/update/(:num)', 'Manager\Members::update/$1');
   $routes->post('members/save', 'Manager\Members::save');
   $routes->get('members/find', 'Manager\Members::find');
 });

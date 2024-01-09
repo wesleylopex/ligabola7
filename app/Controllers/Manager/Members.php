@@ -14,13 +14,35 @@ class Members extends BaseController {
     return view('manager/members/form');
   }
 
+  public function update (int $memberId): string {
+    $memberModel = new MemberModel();
+    $member = $memberModel->find($memberId);
+
+    $memberTeamDivisionModel = new MemberTeamDivisionModel();
+    $memberTeamDivision = $memberTeamDivisionModel->where([
+      'member_id' => $memberId,
+      'team_division_id' => $this->currentTeamDivision->id
+    ])->first();
+
+    $teamModel = new TeamModel();
+    $team = $teamModel->find($this->currentTeamDivision->team_id);
+    
+    $member->role = $memberTeamDivision->role;
+
+    return view('manager/members/form', [
+      'member' => $member,
+      'memberTeamDivision' => $memberTeamDivision,
+      'team' => $team
+    ]);
+  }
+
   public function save () {
     $validationRules = [
-      'name' => 'required',
-      'birth_date' => 'required|valid_date[Y-m-d]',
-      'cpf' => 'required',
-      'rg' => 'permit_empty',
-      'role' => 'required|in_list[athlete,coach,president,assistant]'
+      'name' => ['label' => 'Nome', 'rules' => 'required'],
+      'birth_date' => ['label' => 'Data de nascimento', 'rules' => 'required|valid_date[Y-m-d]'],
+      'cpf' => ['label' => 'CPF', 'rules' => 'required'],
+      'rg' => ['label' => 'RG', 'rules' => 'permit_empty'],
+      'role' => ['label' => 'Tipo', 'rules' => 'required|in_list[athlete,coach,president,assistant]'],
     ];
 
     if (!$this->validate($validationRules)) {
