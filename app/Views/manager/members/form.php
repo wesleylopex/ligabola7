@@ -67,7 +67,7 @@
             <p class="paragraph mr-4">Por favor, confirme os dados antes de salvar.</p>
             <button type="submit" data-loader=".feather-loader" class="flex items-center justify-center text-sm py-2 px-4 rounded-md font-medium bg-blue-600 text-white">
               Salvar
-              <i class="ml-2 animate-spin hidden" data-feather="loader"></i>
+              <i class="w-5 h-5 ml-2 animate-spin hidden" data-feather="loader"></i>
             </button>
           </div>
         </form>

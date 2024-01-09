@@ -106,6 +106,19 @@ class Members extends BaseController {
           'memberInAnotherTeam' => $team->name
         ]);
       }
+
+      $memberAlreadyInTeam = $memberTeamDivisionModel->where([
+        'member_id' => $member['id'],
+        'team_division_id' => $this->currentTeamDivision->id,
+        'role' => $memberRole
+      ])->countAllResults() > 0;
+  
+      if ($memberAlreadyInTeam) {
+        return $this->response->setJSON([
+          'success' => false,
+          'error' => 'Membro já cadastrado'
+        ]);
+      }
     }
 
     $success = $memberModel->save($member);
