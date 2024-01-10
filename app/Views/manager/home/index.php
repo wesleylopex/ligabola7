@@ -71,7 +71,7 @@
               <td class="p-3">
                 <span class="py-1 px-2 rounded-full text-xs font-semibold" :class="getStatusColor(member.status)">{{ getTranslatedStatus(member.status) }}</span>
               </td>
-              <td class="p-3">{{ getStatusDescription(member.id) }}</td>
+              <td class="p-3">{{ getStatusDescription(member.mtd_id) }}</td>
               <td v-show="members.some(member => member.status === 'denied')" class="p-3 flex items-center">
                 <a v-if="member.status === 'denied'" :href="`${baseURL}manager/members/update/${member.id}`">
                   <button data-tippy-content="Clique para editar" class="rounded-full p-2 font-medium hover:bg-gray-200">
@@ -139,8 +139,8 @@
 
           return colors[status]
         },
-        getStatusDescription (memberId) {
-          const member = this.members.find(member => member.id === memberId)
+        getStatusDescription (mtdId) {
+          const member = this.members.find(member => Number(member.mtd_id) === Number(mtdId))
 
           const descriptions = {
             pending: 'Membro será analisado',

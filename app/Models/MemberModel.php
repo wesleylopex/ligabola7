@@ -45,9 +45,10 @@ class MemberModel extends Model {
       ->table('members_teams_divisions')
       ->select('
         members.*,
-        members_teams_divisions.role as role,
-        members_teams_divisions.status as status,
-        members_teams_divisions.denied_reason as denied_reason
+        members_teams_divisions.id AS mtd_id,
+        members_teams_divisions.role AS role,
+        members_teams_divisions.status AS status,
+        members_teams_divisions.denied_reason AS denied_reason
       ')
       ->join('members', 'members_teams_divisions.member_id = members.id')
       ->join('teams_divisions', 'members_teams_divisions.team_division_id = teams_divisions.id')
