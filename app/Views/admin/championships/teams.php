@@ -90,7 +90,7 @@
           })
         },
         teamIsInOtherDivision (teamId, divisionId) {
-          this.teamsDivisions.findIndex(teamDivision => {
+          return this.teamsDivisions.findIndex(teamDivision => {
             const division = this.divisions.find(division => Number(division.id) === Number(teamDivision.division_id))
 
             if (!division) {
@@ -104,7 +104,7 @@
             }
 
             return Number(teamDivision.team_id) === Number(teamId) && Number(teamDivision.division_id) !== Number(divisionId)
-          })
+          }) >= 0
         },
         getTeamsByDivision (divisionId) {
           const teamDivision = this.teamsDivisions.filter(teamDivision => Number(teamDivision.division_id) === Number(divisionId))
@@ -124,8 +124,6 @@
             method: 'POST',
             body
           }).then(response => response.json())
-
-          console.log(response)
 
           if (!response.success) {
             const [error] = Object.values(response.error)
