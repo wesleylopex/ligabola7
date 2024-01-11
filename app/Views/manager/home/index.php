@@ -26,7 +26,7 @@
               <i class="w-4 h-4 flex-shrink-0" data-feather="x"></i>
             </button>
           </div>
-          <a href="<?= base_url('manager/members/create') ?>">
+          <a v-if="division.subscriptions_opened" href="<?= base_url('manager/members/create') ?>">
             <button data-tippy-content="Novo membro" class="ml-2 p-2 rounded-full bg-blue-600 text-white">
               <i class="w-4 h-4" data-feather="plus"></i>
             </button>
@@ -195,6 +195,8 @@
         for (member in this.members) {
           this.members[member].isVisible = true
         }
+
+        this.division.subscriptions_opened = Boolean(Number(this.division.subscriptions_opened))
       }
     }).mount('main')
   </script>

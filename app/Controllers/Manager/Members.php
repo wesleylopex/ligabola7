@@ -10,7 +10,11 @@ use App\Models\TeamModel;
 use App\Models\TeamDivisionModel;
 
 class Members extends BaseController {
-  public function create (): string {
+  public function create () {
+    if (!$this->currentDivision->subscriptions_opened) {
+      return redirect()->to('/manager/home');
+    }
+
     return view('manager/members/form');
   }
 

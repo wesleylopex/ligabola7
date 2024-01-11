@@ -71,6 +71,8 @@
             body
           }).then(response => response.json())
 
+          console.log(response)
+
           if (!response.success) {
             const error = typeof response.error === 'string'
               ? response.error

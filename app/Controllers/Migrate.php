@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Controllers;
+
+use CodeIgniter\Controller;
+use Throwable;
+
+class Migrate extends Controller {
+  public function index () {
+    $migrate = \Config\Services::migrations();
+
+    try {
+      if ($migrate->latest()) {
+        echo 'success';
+      } else {
+        echo 'error';
+      }
+    } catch (Throwable $error) {
+      echo $error->getMessage();
+    }
+  }
+}

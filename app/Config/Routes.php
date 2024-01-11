@@ -6,6 +6,7 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->addRedirect('/', 'manager/home');
+$routes->get('/migrate', 'Migrate::index');
 
 $routes->get('/manager/login', 'Manager\Login::index', ['filter' => 'already-auth']);
 $routes->post('/manager/login', 'Manager\Login::attempt', ['filter' => 'already-auth']);
@@ -36,7 +37,7 @@ $routes->group('admin', ['filter' => 'admin-auth'], static function ($routes) {
 
   $routes->get('championships/(:num)', 'Admin\Championships::divisions/$1');
   $routes->get('championships/settings/(:num)', 'Admin\Championships::settings/$1');
-  $routes->post('championships/save-settings', 'Admin\Championships::save-settings');
+  $routes->post('championships/save-settings', 'Admin\Championships::saveSettings');
   $routes->get('championships/teams/(:num)', 'Admin\Championships::teams/$1');
   $routes->get('championships/division/(:num)', 'Admin\Championships::division/$1');
   $routes->post('championships/saveTeamsDivisions', 'Admin\Championships::saveTeamsDivisions');
