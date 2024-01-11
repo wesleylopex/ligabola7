@@ -75,6 +75,7 @@ class Members extends BaseController {
 
     $memberModel = new MemberModel();
 
+    $isUpdating = !empty($this->request->getPost('id'));
     $rg = $this->request->getPost('rg');
 
     $member = [
@@ -117,7 +118,7 @@ class Members extends BaseController {
         'role' => $memberRole
       ])->countAllResults() > 0;
   
-      if ($memberAlreadyInTeam) {
+      if ($memberAlreadyInTeam && !$isUpdating) {
         return $this->response->setJSON([
           'success' => false,
           'error' => 'Membro já cadastrado'
@@ -137,6 +138,7 @@ class Members extends BaseController {
     $memberId = array_key_exists('id', $member) ? $member['id'] : $memberModel->getInsertID();
 
     $memberTeamDivision = [
+      'id' => $isUpdating ? $this->request->getPost('mtd_id') : null,
       'member_id' => $memberId,
       'team_division_id' => $this->currentTeamDivision->id,
       'status' => 'pending',

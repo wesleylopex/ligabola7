@@ -16,6 +16,7 @@
         <form @submit.prevent="onFormSubmit()" action="<?= base_url('manager/members/save') ?>" method="POST" class="grid grid-cols-1 lg:grid-cols-12 gap-4">
           <?= csrf_field() ?>
           <input type="hidden" name="id" value="<?= !empty($member) ? $member->id : '' ?>">
+          <input type="hidden" name="mtd_id" value="<?= !empty($memberTeamDivision) ? $memberTeamDivision->id : '' ?>">
 
           <div class="lg:col-span-4">
             <label for="" class="text-xs text-gray-800">CPF</label>

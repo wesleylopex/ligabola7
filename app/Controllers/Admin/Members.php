@@ -87,11 +87,12 @@ class Members extends BaseController {
     }
 
     $rg = $this->request->getPost('rg');
+    $subscriptionNumber = $this->request->getPost('subscription_number');
 
     $member = [
       'id' => $this->request->getPost('member_id'),
       'name' => $this->request->getPost('name'),
-      'subscription_number' => $this->request->getPost('subscription_number'),
+      'subscription_number' => empty($subscriptionNumber) ? null : $subscriptionNumber,
       'cpf' => $this->request->getPost('cpf'),
       'rg' => empty($rg) ? null : $rg,
       'birth_date' => $this->request->getPost('birth_date'),
