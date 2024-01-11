@@ -33,23 +33,25 @@
           </div>
           <div class="lg:col-span-4 mt-8">
             <h3 class="font-semibold text-gray-600">Divisões do campeonato</h3>
-            <div class="flex items-center space-x-4 mt-4">
-              <input type="text" v-model="division.name" placeholder="Insira o nome da divisão" class="mt-1 form-input">
-              <div class="flex items-center space-x-2">
-                <div @click="division.color = 'bg-yellow-500'" :class="{ 'border-blue-600': division.color === 'bg-yellow-500' }" class="cursor-pointer border-2 w-8 h-8 rounded-md bg-yellow-500"></div>
-                <div @click="division.color = 'bg-gray-500'" :class="{ 'border-blue-600': division.color === 'bg-gray-500' }" class="cursor-pointer border-2 w-8 h-8 rounded-md bg-gray-500"></div>
-                <div @click="division.color = 'bg-yellow-700'" :class="{ 'border-blue-600': division.color === 'bg-yellow-700' }" class="cursor-pointer border-2 w-8 h-8 rounded-md bg-yellow-700"></div>
-              </div>
-              <div>
-                <button @click="addDivision" type="button" class="text-sm rounded-md px-6 py-2 bg-blue-600 text-white flex items-center">
-                  Adicionar
-                  <div class="w-5 h-5 ml-2 animate-spin hidden"><?= icon('loader') ?></div>
-                </button>
+            <div class="md:flex md:items-center md:space-x-4 space-y-4 md:space-y-0 mt-4">
+              <input type="text" v-model="division.name" placeholder="Insira o nome da divisão" class="mt-1 flex-grow form-input">
+              <div class="flex space-x-4 items-center">
+                <div class="flex items-center space-x-2">
+                  <div @click="division.color = 'bg-yellow-500'" :class="{ 'border-blue-600': division.color === 'bg-yellow-500' }" class="cursor-pointer border-2 w-8 h-8 rounded-md bg-yellow-500"></div>
+                  <div @click="division.color = 'bg-gray-500'" :class="{ 'border-blue-600': division.color === 'bg-gray-500' }" class="cursor-pointer border-2 w-8 h-8 rounded-md bg-gray-500"></div>
+                  <div @click="division.color = 'bg-yellow-700'" :class="{ 'border-blue-600': division.color === 'bg-yellow-700' }" class="cursor-pointer border-2 w-8 h-8 rounded-md bg-yellow-700"></div>
+                </div>
+                <div>
+                  <button @click="addDivision" type="button" class="text-sm rounded-md px-6 py-2 bg-blue-600 text-white flex items-center">
+                    Adicionar
+                    <div class="w-5 h-5 ml-2 animate-spin hidden"><?= icon('loader') ?></div>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
           <div class="lg:col-span-12">
-            <table class="lg:w-1/3 mt-4 block md:table overflow-x-auto whitespace-nowrap w-full text-left font-normal text-gray-600 text-sm">
+            <table class="lg:w-1/3 mt-4 table overflow-x-auto whitespace-nowrap w-full text-left font-normal text-gray-600 text-sm">
               <thead>
                 <tr>
                   <th class="font-semibold text-sm p-3">Divisão</th>

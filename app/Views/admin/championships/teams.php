@@ -16,7 +16,7 @@
         <?= csrf_field() ?>
         <div v-for="division of divisions">
           <h2 class="font-bold text-lg text-gray-800">{{ division.name }} <small>({{ getTeamsByDivision(division.id).length }})</small></h2>
-          <div class="mt-4 grid grid-cols-12 gap-4">
+          <div class="mt-4 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-8 xl:grid-cols-12 gap-4">
             <div @click="openTeamSelectionModal(division.id)" class="cursor-pointer w-full h-24 flex flex-col justify-center items-center rounded-md bg-white p-2 border">
               <div class="p-1 bg-gray-100 rounded-full">
                 <i class="w-4 h-4 text-gray-600" data-feather="plus"></i>
