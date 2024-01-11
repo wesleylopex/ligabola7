@@ -51,7 +51,6 @@
             <tr>
               <th class="font-bold p-3">#</th>
               <th class="font-bold p-3">Nome</th>
-              <th class="font-bold p-3">Número de inscrição</th>
               <th class="font-bold p-3">CPF</th>
               <th class="font-bold p-3">Data de nascimento</th>
               <th class="font-bold p-3">Tipo</th>
@@ -64,7 +63,6 @@
             <tr v-for="(member, index) in members" v-show="member.isVisible" class="even:bg-white odd:bg-gray-100">
               <td class="p-3">{{ (index + 1) }}</td>
               <td class="p-3">{{ member.name }}</td>
-              <td class="p-3">{{ member.subscription_number }}</td>
               <td class="p-3">{{ member.cpf }}</td>
               <td class="p-3">{{ getFormattedDate(member.birth_date) }}</td>
               <td class="p-3">{{ getTranslatedRole(member.role) }}</td>
