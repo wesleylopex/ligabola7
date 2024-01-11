@@ -164,7 +164,7 @@ class Members extends BaseController {
       }
 
       $memberModel->update($memberTeamDivision->member_id, [
-        'subscription_number' => $subscriptionNumber
+        'subscription_number' => empty($subscriptionNumber) ? null : $subscriptionNumber,
       ]);
     }
 
