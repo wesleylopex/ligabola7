@@ -61,7 +61,7 @@
             </select>
             <label for="" class="error"></label>
           </div>
-          <div class="col-span-full">
+          <div v-if="!this.member || !this.member.subscription_number" class="col-span-full">
             <button @click.prevent="clearForm()" type="button" class="text-xs text-blue-600">Limpar dados</button>
           </div>
           <div class="lg:col-span-12 flex items-center justify-end space-x-2">
@@ -196,6 +196,23 @@
         },
         setIsFindingMember (bool) {
           document.querySelector('#is-finding-member').classList.toggle('hidden', !bool)
+        },
+        checkInputsReadOnly () {
+          if (!this.member || !this.member.subscription_number) {
+            return
+          }
+
+          const inputs = ['cpf', 'name', 'rg', 'birth_date']
+
+          inputs.forEach(name => {
+            const input = document.querySelector(`input[name="${name}"]`)
+
+            if (!input) {
+              return
+            }
+
+            input.readOnly = input.value
+          })
         }
       },
       watch: {
@@ -206,6 +223,9 @@
             this.onFormSubmit()
           }
         }
+      },
+      mounted () {
+        this.checkInputsReadOnly()
       }
     }).mount('main')
   </script>
