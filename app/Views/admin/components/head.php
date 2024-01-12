@@ -1,7 +1,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <title>Liga Bola 7</title>
 <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
-<link rel="shortcut icon" href="<?= base_url('website/images/favicon.png') ?>" type="image/x-icon" />
+
+<!-- Fav Icon -->
+<link rel="shortcut icon" href="<?= base_url('images/favicon.png') ?>" type="image/x-icon">
 
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">

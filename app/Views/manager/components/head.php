@@ -2,6 +2,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?= $meta['title'] ?? 'Airgo Pet' ?></title>
 
+<!-- Fav Icon -->
+<link rel="shortcut icon" href="<?= base_url('images/favicon.png') ?>" type="image/x-icon">
+
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

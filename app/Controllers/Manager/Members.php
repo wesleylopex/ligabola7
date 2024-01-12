@@ -45,7 +45,7 @@ class Members extends BaseController {
       'name' => ['label' => 'Nome', 'rules' => 'required'],
       'birth_date' => ['label' => 'Data de nascimento', 'rules' => 'required|valid_date[Y-m-d]'],
       'cpf' => ['label' => 'CPF', 'rules' => 'required'],
-      'rg' => ['label' => 'RG', 'rules' => 'permit_empty'],
+      'rg' => ['label' => 'RG', 'rules' => 'permit_empty|is_unique[members.rg,id]', 'errors' => ['is_unique' => 'RG incompatível para esse CPF']],
       'role' => ['label' => 'Tipo', 'rules' => 'required|in_list[athlete,coach,president,assistant]'],
     ];
 
@@ -95,7 +95,8 @@ class Members extends BaseController {
 
       $memberInAnotherTeam = $memberTeamDivisionModel->where([
         'member_id' => $memberAlreadyExists->id,
-        'team_division_id !=' => $this->currentTeamDivision->id
+        'team_division_id !=' => $this->currentTeamDivision->id,
+        'status !=' => 'denied'
       ])->first();
 
       if (!$ignoreMemberInAnotherTeam && $memberInAnotherTeam) {
