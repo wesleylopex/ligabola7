@@ -88,6 +88,23 @@ class Members extends BaseController {
 
     $rg = $this->request->getPost('rg');
     $subscriptionNumber = $this->request->getPost('subscription_number');
+    $memberId = $this->request->getPost('member_id');
+
+    if (!empty($subscriptionNumber)) {
+      $memberModel = new MemberModel();
+
+      $subscriptionNumberAlreadyExists = $memberModel->where([
+        'subscription_number' => $subscriptionNumber,
+        'id !=' => $memberId
+      ])->first();
+
+      if ($subscriptionNumberAlreadyExists) {
+        return $this->response->setJSON([
+          'success' => false,
+          'error' => 'Já existe um atleta com esse número de inscrição'
+        ]);
+      }
+    }
 
     $member = [
       'id' => $this->request->getPost('member_id'),
