@@ -26,12 +26,12 @@
             </div>
           </div>
           <div>
-            <button @click="clearFilters()" class="text-blue-600 text-xs">Limpar filtros</button>
+            <button onclick="clearFilters()" class="text-blue-600 text-xs">Limpar filtros</button>
             <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2">
               <div class="flex items-center px-2 rounded-full bg-gray-100">
                 <i class="w-5 h-5 text-gray-600" data-feather="search"></i>
-                <input type="text" v-model="search" placeholder="Digite para pesquisar" class="text-gray-600 text-sm outline-none p-2 bg-transparent w-full">
-                <button data-tippy-content="Limpar filtro" @click="search = ''" class="p-1 rounded-full bg-gray-200 text-gray-600">
+                <input type="text" placeholder="Digite para pesquisar" class="search text-gray-600 text-sm outline-none p-2 bg-transparent w-full">
+                <button data-tippy-content="Limpar filtro" onclick="clearFilters()"  class="p-1 rounded-full bg-gray-200 text-gray-600">
                   <i class="w-4 h-4" data-feather="x"></i>
                 </button>
               </div>
@@ -115,6 +115,11 @@
     function setActionDeleteConfirmationModal (memberId) {
       const action = `${pageData.baseURL}admin/members/delete/${memberId}`
       openDeleteConfirmationModal(action)
+    }
+
+    function clearFilters () {
+      document.querySelector('input.search').value = ''
+      membersList.search()
     }
 
     // Vue.createApp({
