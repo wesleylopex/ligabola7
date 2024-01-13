@@ -30,7 +30,15 @@
           </div>
           <div class="lg:col-span-4">
             <label for="" class="text-xs text-gray-800">CPF</label>
-            <input type="text" name="cpf" maxlength="14" data-mask="000.000.000-00" value="<?= !empty($member) ? $member->cpf : '' ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
+            <div>
+              <div class="flex items-center mt-1 form-input border-gray-200 justify-between p-0 pr-2">
+                <input type="text" name="cpf" maxlength="14" data-mask="000.000.000-00" value="<?= !empty($member) ? $member->cpf : '' ?>"  class="form-input border-0 w-full h-full">
+                <button data-tippy-content="Copiar CPF" type="button" @click="copyCPF()">
+                  <i class="cursor-pointer w-4 h-4" data-feather="copy"></i>
+                </button>
+              </div>
+            </div>
+            <!-- <input type="text" name="cpf" maxlength="14" data-mask="000.000.000-00" value="<?= !empty($member) ? $member->cpf : '' ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent"> -->
             <label for="" class="error"></label>
           </div>
           <div class="lg:col-span-4">
@@ -125,6 +133,12 @@
           setFormIsLoading(form, false, true)
           showNotification('Membro salvo com sucesso')
           setTimeout(() => window.location.href = document.referrer, 2000)
+        },
+        copyCPF () {
+          const cpfInput = document.querySelector('input[name="cpf"]')
+          cpfInput.select()
+          document.execCommand('copy')
+          showNotification('CPF copiado')
         }
       }
     }).mount('#app')
