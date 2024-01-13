@@ -40,13 +40,19 @@ $routes->group('admin', ['filter' => 'admin-auth'], static function ($routes) {
   $routes->post('championships/save-settings', 'Admin\Championships::saveSettings');
   $routes->get('championships/teams/(:num)', 'Admin\Championships::teams/$1');
   $routes->get('championships/division/(:num)', 'Admin\Championships::division/$1');
-  $routes->post('championships/saveTeamsDivisions', 'Admin\Championships::saveTeamsDivisions');
+  $routes->post('championships/save-teams-divisions', 'Admin\Championships::saveTeamsDivisions');
   $routes->get('championships/division/(:num)/settings', 'Admin\Championships::divisionSettings/$1');
   $routes->post('championships/save-divisions-settings', 'Admin\Championships::saveDivisionsSettings');
 
-  $routes->post('members/approve', 'Admin\Members::approve');
-  $routes->post('members/deleteMTD/(:num)', 'Admin\Members::deleteMTD/$1');
+  $routes->post('members-teams-divisions/approve', 'Admin\MembersTeamsDivisions::approve');
+  $routes->post('members-teams-divisions/delete/(:num)', 'Admin\MembersTeamsDivisions::delete/$1');
+  $routes->get('members-teams-divisions/update/(:num)', 'Admin\MembersTeamsDivisions::update/$1');
+  $routes->post('members-teams-divisions/save', 'Admin\MembersTeamsDivisions::save');
+
+  $routes->get('members', 'Admin\Members::index');
+  $routes->get('members/create', 'Admin\Members::create');
   $routes->get('members/update/(:num)', 'Admin\Members::update/$1');
+  $routes->post('members/delete/(:num)', 'Admin\Members::delete/$1');
   $routes->post('members/save', 'Admin\Members::save');
 
   $routes->get('teams', 'Admin\Teams::index');

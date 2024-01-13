@@ -17,6 +17,23 @@ input[readonly] {
   @apply text-xs text-gray-600;
 }
 
+ul.pagination li {
+  @apply text-gray-600 text-sm;
+}
+
+ul.pagination li:not(.disabled) .page {
+  @apply rounded-md border-[#c1c3c7] transition-all duration-300;
+  @apply w-8 h-8 mx-1 flex justify-center items-center;
+}
+
+ul.pagination li:not(.disabled) .page:hover {
+  @apply bg-[#177DFF] border-[#177DFF] text-white no-underline;
+}
+
+ul.pagination li:not(.disabled).active .page {
+  @apply bg-[#177DFF] border-[#177DFF] text-white no-underline;
+}
+
 /* General */
 
 .bg-no-repeat {

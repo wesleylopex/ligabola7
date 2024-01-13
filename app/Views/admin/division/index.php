@@ -80,7 +80,7 @@
               <td class="p-3">{{ getMemberStatusDescription(member.id) }}</td>
               <td class="p-3">{{ formatDateTime(member.created_at) }}</td>
               <td class="p-3 flex space-x-1 items-center">
-                <a :href="`${baseURL}admin/members/update/${member.id}`">
+                <a :href="`${baseURL}admin/members-teams-divisions/update/${member.id}`">
                   <button data-tippy-content="Clique para editar" class="rounded-full p-2 font-medium hover:bg-gray-200">
                     <i class="w-4 h-4" data-feather="edit"></i>
                   </button>
@@ -154,7 +154,7 @@
           showNotification('Membro excluído com sucesso')
         },
         openDeleteConfirmationModal (mtdId) {
-          const action = `${this.baseURL}admin/members/deleteMTD/${mtdId}`
+          const action = `${this.baseURL}admin/members-teams-divisions/deleteMTD/${mtdId}`
           openDeleteConfirmationModal(action)
         },
         async approveRecord () {
@@ -213,7 +213,7 @@
             subscription_number: member.subscription_number
           }
 
-          const action = `${this.baseURL}admin/members/approve`
+          const action = `${this.baseURL}admin/members-teams-divisions/approve`
 
           openApproveConfirmationModal(action)
         },

@@ -12,7 +12,7 @@
       <h1 class="mt-10 text-3xl font-bold text-gray-100">Times de {{ championship.name }}</h1>
     </header>
     <section class="mt-10 max-w-screen-2xl mx-auto px-10 md:px-20 2xl:px-10">
-      <form @submit.prevent="onFormSubmit()" action="<?= base_url('admin/championships/saveTeamsDivisions') ?>" class="w-full rounded-md bg-white p-12 shadow-md grid grid-cols-1 gap-12">
+      <form @submit.prevent="onFormSubmit()" action="<?= base_url('admin/championships/save-teams-divisions') ?>" class="w-full rounded-md bg-white p-12 shadow-md grid grid-cols-1 gap-12">
         <?= csrf_field() ?>
         <div v-for="division of divisions">
           <h2 class="font-bold text-lg text-gray-800">{{ division.name }} <small>({{ getTeamsByDivision(division.id).length }})</small></h2>

@@ -23,6 +23,15 @@
           <p class="text-gray-400 text-center text-xs">Clique para visualizar todos os times</p>
         </div>
       </a>
+      <a href="<?= base_url('admin/members') ?>">
+        <div class="w-full flex flex-col items-center rounded-md bg-white p-6 shadow-md">
+          <div class="p-2 bg-gray-100 rounded-full">
+            <i class="w-5 h-5 text-gray-600" data-feather="users"></i>
+          </div>
+          <h2 class="my-2 text-gray-600 font-semibold text-sm">Todos os membros</h2>
+          <p class="text-gray-400 text-center text-xs">Clique para visualizar todos os membros</p>
+        </div>
+      </a>
       <a href="<?= base_url('admin/championships/create') ?>">
         <div class="w-full flex flex-col items-center rounded-md bg-white p-6 shadow-md">
           <div class="p-2 bg-gray-100 rounded-full">

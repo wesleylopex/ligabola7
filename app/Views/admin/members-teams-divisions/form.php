@@ -13,18 +13,19 @@
     </header>
     <section class="mt-10 max-w-screen-2xl mx-auto px-10 md:px-20 2xl:px-10">
       <div class="w-full rounded-md bg-white p-6 shadow-md">
-        <form @submit.prevent="onFormSubmit()" action="<?= base_url('admin/members/save') ?>" method="POST" class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        <form @submit.prevent="onFormSubmit()" action="<?= base_url('admin/members-teams-divisions/save') ?>" method="POST" class="grid grid-cols-1 lg:grid-cols-12 gap-4">
           <?= csrf_field() ?>
-          <input type="hidden" name="id" value="<?= !empty($member) ? $member->id : '' ?>">
+          <input type="hidden" name="member_id" value="<?= !empty($member) ? $member->id : '' ?>">
+          <input type="hidden" name="mtd_id" value="<?= !empty($mtd) ? $mtd->id : '' ?>">
 
           <div class="lg:col-span-4">
             <label for="" class="text-xs text-gray-800">Nome completo</label>
-            <input type="text" name="name" value="<?= !empty($member) ? $member->name : '' ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
+            <input type="text" name="name" value="<?= $member->name ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
             <label for="" class="error"></label>
           </div>
           <div class="lg:col-span-4">
             <label for="" class="text-xs text-gray-800">Número de inscrição</label>
-            <input type="text" name="subscription_number" value="<?= !empty($member) ? $member->subscription_number : '' ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
+            <input type="text" name="subscription_number" value="<?= $member->subscription_number ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
             <label for="" class="error"></label>
           </div>
           <div class="lg:col-span-4">
@@ -37,16 +38,43 @@
                 </button>
               </div>
             </div>
+            <!-- <input type="text" name="cpf" maxlength="14" data-mask="000.000.000-00" value="<?= !empty($member) ? $member->cpf : '' ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent"> -->
             <label for="" class="error"></label>
           </div>
           <div class="lg:col-span-4">
             <label for="" class="text-xs text-gray-800">RG</label>
-            <input type="text" name="rg" value="<?= !empty($member) ? $member->rg : '' ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
+            <input type="text" name="rg" value="<?= $member->rg ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
             <label for="" class="error"></label>
           </div>
           <div class="lg:col-span-4">
             <label for="" class="text-xs text-gray-800">Data de nascimento</label>
-            <input type="date" name="birth_date" value="<?= !empty($member) ? $member->birth_date : '' ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
+            <input type="date" name="birth_date" value="<?= $member->birth_date ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
+            <label for="" class="error"></label>
+          </div>
+          <div class="lg:col-span-4">
+            <label for="role" class="text-xs text-gray-800">Tipo de membro</label>
+            <select name="role" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
+              <option value=""></option>
+              <option value="athlete" :selected="mtd.role === 'athlete'">Atleta</option>
+              <option value="coach" :selected="mtd.role === 'coach'">Treinador</option>
+              <option value="assistant" :selected="mtd.role === 'assistant'">Auxiliar</option>
+              <option value="president" :selected="mtd.role === 'president'">Presidente / Representante legal</option>
+            </select>
+            <label for="" class="error"></label>
+          </div>
+          <div class="lg:col-span-4">
+            <label for="status" class="text-xs text-gray-800">Status</label>
+            <select name="status" v-model="mtd.status" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
+              <option value=""></option>
+              <option value="pending" <?= !empty($mtd) && $mtd->status === 'pending' ? 'selected' : '' ?>>Pendente</option>
+              <option value="approved" <?= !empty($mtd) && $mtd->status === 'approved' ? 'selected' : '' ?>>Aprovado</option>
+              <option value="denied" <?= !empty($mtd) && $mtd->status === 'denied' ? 'selected' : '' ?>>Reprovado</option>
+            </select>
+            <label for="" class="error"></label>
+          </div>
+          <div v-show="mtd.status === 'denied'" class="lg:col-span-4">
+            <label for="type" class="text-xs text-gray-800">Motivo de reprovação</label>
+            <input type="text" placeholder="Digite aqui o motivo pelo qual o membro foi reprovado" name="denied_reason" :value="mtd.denied_reason" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
             <label for="" class="error"></label>
           </div>
           <div class="lg:col-span-12 flex justify-end">
@@ -65,7 +93,8 @@
   <script>
     const pageData = {
       baseURL: '<?= base_url() ?>',
-      member: <?= json_encode($member ?? []) ?>
+      member: <?= json_encode($member ?? []) ?>,
+      mtd: <?= json_encode($mtd ?? []) ?>
     }
 
     Vue.createApp({
@@ -82,7 +111,7 @@
           const cpfValid = isCPFValid(body.get('cpf'))
 
           if (!cpfValid) {
-            return showNotification('CPF inválido')
+            return showNotify('CPF inválido')
           }
 
           setFormIsLoading(form, true)
@@ -91,6 +120,8 @@
             method: 'POST',
             body
           }).then(response => response.json())
+
+          console.log(response)
 
           if (!response.success) {
             const error = typeof response.error === 'string'
