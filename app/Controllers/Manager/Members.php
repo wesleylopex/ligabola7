@@ -45,7 +45,7 @@ class Members extends BaseController {
       'name' => ['label' => 'Nome', 'rules' => 'required'],
       'birth_date' => ['label' => 'Data de nascimento', 'rules' => 'required|valid_date[Y-m-d]'],
       'cpf' => ['label' => 'CPF', 'rules' => 'required'],
-      'rg' => ['label' => 'RG', 'rules' => 'permit_empty|is_unique[members.rg,id]', 'errors' => ['is_unique' => 'RG incompatível para esse CPF']],
+      'rg' => ['label' => 'RG', 'rules' => 'permit_empty'],
       'role' => ['label' => 'Tipo', 'rules' => 'required|in_list[athlete,coach,president,assistant]'],
     ];
 
@@ -77,6 +77,25 @@ class Members extends BaseController {
 
     $isUpdating = !empty($this->request->getPost('id'));
     $rg = $this->request->getPost('rg');
+
+    $rgDuplicated = false;
+
+    if ($isUpdating) {
+      $rgDuplicated = $memberModel->where([
+        'rg' => $rg,
+        'id !=' => $this->request->getPost('id')
+      ])->countAllResults() > 0;
+    } else {
+      $rgDuplicated = $memberModel->where('rg', $rg)
+        ->countAllResults() > 0;
+    }
+
+    if ($rgDuplicated) {
+      return $this->response->setJSON([
+        'success' => false,
+        'error' => 'RG já cadastrado'
+      ]);
+    }
 
     $member = [
       'name' => $this->request->getPost('name'),
