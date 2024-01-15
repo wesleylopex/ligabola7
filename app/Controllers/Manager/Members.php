@@ -78,25 +78,6 @@ class Members extends BaseController {
     $isUpdating = !empty($this->request->getPost('id'));
     $rg = $this->request->getPost('rg');
 
-    $rgDuplicated = false;
-
-    if ($isUpdating) {
-      $rgDuplicated = $memberModel->where([
-        'rg' => $rg,
-        'id !=' => $this->request->getPost('id')
-      ])->countAllResults() > 0;
-    } else {
-      $rgDuplicated = $memberModel->where('rg', $rg)
-        ->countAllResults() > 0;
-    }
-
-    if ($rgDuplicated) {
-      return $this->response->setJSON([
-        'success' => false,
-        'error' => 'RG já cadastrado'
-      ]);
-    }
-
     $member = [
       'name' => $this->request->getPost('name'),
       'birth_date' => $this->request->getPost('birth_date'),
@@ -144,6 +125,26 @@ class Members extends BaseController {
           'error' => 'Membro já cadastrado'
         ]);
       }
+    }
+
+    $rgDuplicated = false;
+    $hasNoId = !array_key_exists('id', $member);
+
+    if ($hasNoId) {
+      $rgDuplicated = $memberModel->where('rg', $rg)
+        ->countAllResults() > 0;
+    } else {
+      $rgDuplicated = $memberModel->where([
+        'rg' => $rg,
+        'id !=' => $member['id']
+      ])->countAllResults() > 0;
+    }
+
+    if (!empty($rg) && $rgDuplicated) {
+      return $this->response->setJSON([
+        'success' => false,
+        'error' => 'RG já cadastrado'
+      ]);
     }
 
     $success = $memberModel->save($member);
