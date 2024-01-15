@@ -154,7 +154,7 @@
           showNotification('Membro excluído com sucesso')
         },
         openDeleteConfirmationModal (mtdId) {
-          const action = `${this.baseURL}admin/members-teams-divisions/deleteMTD/${mtdId}`
+          const action = `${this.baseURL}admin/members-teams-divisions/delete/${mtdId}`
           openDeleteConfirmationModal(action)
         },
         async approveRecord () {
