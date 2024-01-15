@@ -41,11 +41,34 @@
         <table class="mt-14 block sm:table overflow-x-auto w-full text-left font-normal text-[#4A4251] text-sm">
           <thead>
             <tr>
-              <th class="font-bold p-3 cursor-pointer sort" data-sort="name">Nome</th>
-              <th class="font-bold p-3 cursor-pointer sort" data-sort="subscription_number">Número de inscrição</th>
+              <th class="font-bold p-3 cursor-pointer sort" data-sort="name">
+                <div class="flex items-center justify-between">
+                  Nome
+                  <div class="flex space-x-1 justify-center items-center">
+                    <i class="desc shrink-0 w-3 h-3 text-gray-400" data-feather="arrow-down"></i>
+                    <i class="asc shrink-0 w-3 h-3 text-gray-400" data-feather="arrow-up"></i>
+                  </div>
+                </div>
+              </th>
+              <th class="font-bold p-3 cursor-pointer sort asc" data-sort="subscription_number" data-default-order='asc'>
+                <div class="flex items-center justify-between">
+                  Número de inscrição
+                  <div class="flex space-x-1 justify-center items-center">
+                    <i class="desc shrink-0 w-3 h-3 text-gray-400" data-feather="arrow-down"></i>
+                    <i class="asc shrink-0 w-3 h-3 text-gray-400" data-feather="arrow-up"></i>
+                  </div>
+                </div>
+              </th>
               <th class="font-bold p-3">CPF</th>
-              <th class="font-bold p-3 cursor-pointer">Data de Nascimento</th>
-              <!-- <th class="font-bold p-3">Criado em</th> -->
+              <th class="font-bold p-3 cursor-pointer sort" data-sort="plain-birth-date">
+                <div class="flex items-center justify-between">
+                  Data de Nascimento
+                  <div class="flex space-x-1 justify-center items-center">
+                    <i class="desc shrink-0 w-3 h-3 text-gray-400" data-feather="arrow-down"></i>
+                    <i class="asc shrink-0 w-3 h-3 text-gray-400" data-feather="arrow-up"></i>
+                  </div>
+                </div>
+              </th>
               <th class="font-bold p-3">Ações</th>
             </tr>
           </thead>
@@ -55,8 +78,7 @@
               <td class="p-3 name"><?= $member->name ?></td>
               <td class="p-3 subscription_number"><?= $member->subscription_number ?></td>
               <td class="p-3 cpf"><?= $member->cpf ?></td>
-              <td class="p-3 birth_date"><?= date('d/m/Y', strtotime($member->birth_date)) ?></td>
-              <!-- <td class="p-3">{{ formatDateTime(member.created_at) }}</td> -->
+              <td class="p-3 birth_date plain-birth-date" data-birth-date="<?= $member->birth_date ?>"><?= date('d/m/Y', strtotime($member->birth_date)) ?></td>
               <td class="p-3 flex space-x-1 items-center">
                 <a href="<?= base_url('admin/members/update/' . $member->id) ?>">
                   <button data-tippy-content="Clique para editar" class="rounded-full p-2 font-medium hover:bg-gray-200">
@@ -94,7 +116,15 @@
     })
 
     const membersList = new List('members-list', {
-      valueNames: ['name', 'subscription_number', 'cpf', 'rg', 'birth_date', 'created_at'],
+      valueNames: [
+        'name',
+        'subscription_number',
+        'cpf',
+        'rg',
+        'birth_date',
+        { name: 'plain-birth-date', attr: 'data-birth-date' },
+        'created_at'
+      ],
       page: 50,
       pagination: [{
         name: "pagination",

@@ -27,11 +27,15 @@ ul.pagination li:not(.disabled) .page {
 }
 
 ul.pagination li:not(.disabled) .page:hover {
-  @apply bg-[#177DFF] border-[#177DFF] text-white no-underline;
+  @apply bg-blue-600 border-blue-600 text-white no-underline;
 }
 
 ul.pagination li:not(.disabled).active .page {
-  @apply bg-[#177DFF] border-[#177DFF] text-white no-underline;
+  @apply bg-blue-600 border-blue-600 text-white no-underline;
+}
+
+.sort.asc .asc, .sort.desc .desc {
+  @apply text-blue-600;
 }
 
 /* General */
