@@ -88,7 +88,7 @@
                 <button @click="openDeleteConfirmationModal(member.id)" data-tippy-content="Clique para excluir" class="rounded-full p-2 font-medium hover:bg-gray-200">
                   <i class="w-4 h-4" data-feather="trash"></i>
                 </button>
-                <button @click="openApproveConfirmationModal(member.id)" v-if="member.status === 'pending'" data-tippy-content="Clique para aprovar" class="rounded-full p-2 font-medium bg-gray-200 hover:text-gray-100 hover:bg-green-500 transition-colors duration-300">
+                <button @click="beforeApproveMember(member.id)" v-if="member.status === 'pending'" data-tippy-content="Clique para aprovar" class="rounded-full p-2 font-medium bg-gray-200 hover:text-gray-100 hover:bg-green-500 transition-colors duration-300">
                   <i class="w-4 h-4" data-feather="check"></i>
                 </button>
               </td>
@@ -216,6 +216,25 @@
           const action = `${this.baseURL}admin/members-teams-divisions/approve`
 
           openApproveConfirmationModal(action)
+        },
+        async beforeApproveMember (mtdId) {
+          const mtd = this.members.find(member => Number(member.id) === Number(mtdId))
+
+          if (!mtd) {
+            return showNotification('Não foi possível encontrar o membro')
+          }
+
+          if (mtd.role !== 'athlete') {
+          return this.openApproveConfirmationModal(mtdId)
+          }
+
+          const athletesLength = this.members.filter(member => member.role === 'athlete' && member.status === 'approved' && Number(member.team_id) === Number(mtd.team_id)).length
+
+          if (athletesLength >= 23) {
+            showNotification(`O time já possui ${athletesLength} atletas aprovados para o campeonato vigente.`)
+          }
+          
+          return this.openApproveConfirmationModal(mtdId)
         },
         downloadCSV () {
           const rows = [['Time', 'Nome', 'Número de inscrição', 'CPF', 'RG', 'Data de nascimento', 'Tipo', 'Status', 'Descrição do status', 'Criado em']]
@@ -377,6 +396,7 @@
       },
       mounted () {
         for (member in this.members) {
+          console.log({...this.members[member]})
           this.members[member].isVisible = true
         }
 

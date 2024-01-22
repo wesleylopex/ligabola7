@@ -88,6 +88,7 @@ class MemberModel extends Model {
       ->join('teams_divisions', 'members_teams_divisions.team_division_id = teams_divisions.id')
       ->join('teams', 'teams_divisions.team_id = teams.id')
       ->where('teams_divisions.division_id', $divisionId)
+      ->orderBy('members_teams_divisions.created_at', 'DESC')
       ->get()
       ->getResult();
 
