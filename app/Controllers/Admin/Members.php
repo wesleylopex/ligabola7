@@ -75,8 +75,8 @@ class Members extends BaseController {
       'rg' => empty($rg) ? null : $rg,
       'birth_date' => $this->request->getPost('birth_date'),
       'banned_by' => $this->request->getPost('banned_by'),
-      'banned_at' => $this->request->getPost('banned_at'),
-      'ban_expires_at' => $this->request->getPost('ban_expires_at'),
+      'banned_at' => !empty($this->request->getPost('banned_at')) ? $this->request->getPost('banned_at') : null,
+      'ban_expires_at' => !empty($this->request->getPost('ban_expires_at')) ? $this->request->getPost('ban_expires_at') : null,
     ];
 
     $memberModel = new MemberModel();

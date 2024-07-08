@@ -17,13 +17,13 @@ class AddMembersBanColumns extends Migration
                 'after' => 'rg'
             ],
             'banned_at' => [
-                'type' => 'DATETIME',
+                'type' => 'DATE',
                 'null' => true,
                 'default' => null,
                 'after' => 'banned_by'
             ],
             'ban_expires_at' => [
-                'type' => 'DATETIME',
+                'type' => 'DATE',
                 'null' => true,
                 'default' => null,
                 'after' => 'banned_at'

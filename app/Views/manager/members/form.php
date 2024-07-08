@@ -61,6 +61,13 @@
             </select>
             <label for="" class="error"></label>
           </div>
+          <div class="lg:col-span-full">
+            <div v-if="memberIsBanned" class="w-fit bg-red-200 border border-red-600 rounded-lg p-2 flex items-center">
+              <p class="text-xs leading-relaxed">  
+                <span class="font-bold">Atenção</span>, o atleta que você está tentando inscrever está atualmente suspenso até {{ formatDate(member.ban_expires_at) }}, por decisão da {{ member.banned_by }}.<br>Em caso de dúvidas, entre em contato com o administrador da Liga Bola 7.
+              </p>
+            </div>
+          </div>
           <div v-if="!this.member || !this.member.subscription_number" class="col-span-full">
             <button @click.prevent="clearForm()" type="button" class="text-xs text-blue-600">Limpar dados</button>
           </div>
@@ -97,7 +104,8 @@
         return {
           ...pageData,
           memberInAnotherTeam: null,
-          ignoreMemberInAnotherTeam: false
+          ignoreMemberInAnotherTeam: false,
+          memberIsBanned: false
         }
       },
       methods: {
@@ -114,6 +122,8 @@
             method: 'GET'
           }).then(response => response.json())
 
+          const member = response.member
+
           this.setIsFindingMember(false)
 
           if (!response.success) {
@@ -129,9 +139,18 @@
               return
             }
 
-            input.value = response.member[name]
+            input.value = member[name]
             input.readOnly = input.value
           })
+
+          const banExpiresAtTimestamp = member.ban_expires_at ? Date.parse(member.ban_expires_at.replace(' ', 'T')) : null
+          const nowTimestamp = Date.now()
+
+          if (banExpiresAtTimestamp && banExpiresAtTimestamp > nowTimestamp) {
+            this.memberIsBanned = true
+            this.member.ban_expires_at = member.ban_expires_at
+            this.member.banned_by = member.banned_by
+          }
 
           showNotification(`Os dados do atleta vinculado à esse CPF foram automaticamente completados.`)
         },
@@ -193,6 +212,8 @@
 
             input.readOnly = false
           })
+
+          this.memberIsBanned = false
         },
         setIsFindingMember (bool) {
           document.querySelector('#is-finding-member').classList.toggle('hidden', !bool)
@@ -213,6 +234,13 @@
 
             input.readOnly = input.value
           })
+        },
+        formatDate (date) {
+          if (!date) {
+            return ''
+          }
+
+          return new Date(date).toLocaleDateString('pt-BR')
         }
       },
       watch: {

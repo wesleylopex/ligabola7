@@ -54,19 +54,19 @@
               <label for="" class="text-xs text-gray-800">Suspenso por</label>
               <select name="banned_by" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
                 <option value=""></option>
-                <option value="Liga Bola 7">Liga Bola 7</option>
-                <option value="Junta Disciplinar">Junta Disciplinar</option>
+                <option <?= !empty($member) && $member->banned_by === 'Liga Bola 7' ? 'selected' : '' ?> value="Liga Bola 7">Liga Bola 7</option>
+                <option <?= !empty($member) && $member->banned_by === 'Junta Disciplinar' ? 'selected' : '' ?> value="Junta Disciplinar">Junta Disciplinar</option>
               </select>
               <label for="" class="error"></label>
             </div>
             <div>
               <label for="" class="text-xs text-gray-800">Data de suspensão</label>
-              <input type="date" name="banned_at" value="<?= !empty($member) ? $member->banned_at : '' ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
+              <input type="date" name="banned_at" value="<?= !empty($member) && !empty($member->banned_at) ? date('Y-m-d', strtotime($member->banned_at)) : '' ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
               <label for="" class="error"></label>
             </div>
             <div>
               <label for="" class="text-xs text-gray-800">Data de fim da suspensão</label>
-              <input type="date" name="ban_expires_at" value="<?= !empty($member) ? $member->ban_expires_at : '' ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
+              <input type="date" name="ban_expires_at" value="<?= !empty($member) && !empty($member->ban_expires_at) ? date('Y-m-d', strtotime($member->ban_expires_at)) : '' ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
               <label for="" class="error"></label>
             </div>
           </div>
