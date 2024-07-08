@@ -49,11 +49,32 @@
             <input type="date" name="birth_date" value="<?= !empty($member) ? $member->birth_date : '' ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
             <label for="" class="error"></label>
           </div>
+          <div class="lg:col-span-full grid lg:grid-cols-3 gap-4">
+            <div>
+              <label for="" class="text-xs text-gray-800">Suspenso por</label>
+              <select name="banned_by" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
+                <option value=""></option>
+                <option value="Liga Bola 7">Liga Bola 7</option>
+                <option value="Junta Disciplinar">Junta Disciplinar</option>
+              </select>
+              <label for="" class="error"></label>
+            </div>
+            <div>
+              <label for="" class="text-xs text-gray-800">Data de suspensão</label>
+              <input type="date" name="banned_at" value="<?= !empty($member) ? $member->banned_at : '' ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
+              <label for="" class="error"></label>
+            </div>
+            <div>
+              <label for="" class="text-xs text-gray-800">Data de fim da suspensão</label>
+              <input type="date" name="ban_expires_at" value="<?= !empty($member) ? $member->ban_expires_at : '' ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
+              <label for="" class="error"></label>
+            </div>
+          </div>
           <div class="lg:col-span-12 flex justify-end">
-          <button type="submit" data-loader=".feather-loader" class="flex items-center justify-center text-sm py-2 px-4 rounded-md font-medium bg-blue-600 text-white">
-            Salvar
-            <i class="w-5 h-5 ml-2 animate-spin hidden" data-feather="loader"></i>
-          </button>
+            <button type="submit" data-loader=".feather-loader" class="flex items-center justify-center text-sm py-2 px-4 rounded-md font-medium bg-blue-600 text-white">
+              Salvar
+              <i class="w-5 h-5 ml-2 animate-spin hidden" data-feather="loader"></i>
+            </button>
           </div>
         </form>
       </div>

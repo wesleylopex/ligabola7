@@ -52,6 +52,9 @@ class Members extends BaseController {
       'cpf' => 'trim|required|max_length[255]|is_unique[members.cpf,id,'. $id .']',
       'rg' => 'trim|permit_empty|max_length[255]|is_unique[members.rg,id,'. $id .']',
       'birth_date' => 'trim|max_length[255]',
+      'banned_by' => 'trim|max_length[255]',
+      'banned_at' => 'trim|max_length[255]',
+      'ban_expires_at' => 'trim|max_length[255]',
     ];
 
     if (!$this->validate($validationRules)) {
@@ -60,22 +63,6 @@ class Members extends BaseController {
         'error' => $this->validator->getErrors(),
       ]);
     }
-
-    // if (!empty($subscriptionNumber)) {
-    //   $memberModel = new MemberModel();
-
-    //   $subscriptionNumberAlreadyExists = $memberModel->where([
-    //     'subscription_number' => $subscriptionNumber,
-    //     'id !=' => $memberId
-    //   ])->first();
-
-    //   if ($subscriptionNumberAlreadyExists) {
-    //     return $this->response->setJSON([
-    //       'success' => false,
-    //       'error' => 'Já existe um atleta com esse número de inscrição'
-    //     ]);
-    //   }
-    // }
 
     $subscriptionNumber = $this->request->getPost('subscription_number');
     $rg = $this->request->getPost('rg');
@@ -87,6 +74,9 @@ class Members extends BaseController {
       'cpf' => $this->request->getPost('cpf'),
       'rg' => empty($rg) ? null : $rg,
       'birth_date' => $this->request->getPost('birth_date'),
+      'banned_by' => $this->request->getPost('banned_by'),
+      'banned_at' => $this->request->getPost('banned_at'),
+      'ban_expires_at' => $this->request->getPost('ban_expires_at'),
     ];
 
     $memberModel = new MemberModel();

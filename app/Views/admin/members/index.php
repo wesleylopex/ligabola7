@@ -59,6 +59,7 @@
                   </div>
                 </div>
               </th>
+              <th class="font-bold p-3">Suspenso até</th>
               <th class="font-bold p-3">CPF</th>
               <th class="font-bold p-3 cursor-pointer sort" data-sort="plain-birth-date">
                 <div class="flex items-center justify-between">
@@ -77,6 +78,7 @@
             <tr class="even:bg-white odd:bg-gray-100">
               <td class="p-3 name"><?= $member->name ?></td>
               <td class="p-3 subscription_number"><?= $member->subscription_number ?></td>
+              <td class="p-3 cpf"><?= $member->ban_expires_at ? date('d/m/Y', strtotime($member->ban_expires_at)) : '' ?></td>
               <td class="p-3 cpf"><?= $member->cpf ?></td>
               <td class="p-3 birth_date plain-birth-date" data-birth-date="<?= $member->birth_date ?>"><?= date('d/m/Y', strtotime($member->birth_date)) ?></td>
               <td class="p-3 flex space-x-1 items-center">

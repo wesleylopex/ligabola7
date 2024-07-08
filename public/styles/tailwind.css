@@ -1621,6 +1621,10 @@ small {
     grid-column: span 6 / span 6;
   }
 
+  .lg\:col-span-full {
+    grid-column: 1 / -1;
+  }
+
   .lg\:flex {
     display: flex;
   }
@@ -1631,6 +1635,10 @@ small {
 
   .lg\:grid-cols-12 {
     grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .lg\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .lg\:grid-cols-6 {
