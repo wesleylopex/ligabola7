@@ -62,7 +62,7 @@
             <label for="" class="error"></label>
           </div>
           <div class="lg:col-span-full">
-            <div v-if="memberIsBanned" class="w-fit bg-red-200 border border-red-600 rounded-lg p-2 flex items-center">
+            <div id="ban-message" v-show="memberIsBanned" class="hidden w-fit bg-red-200 border border-red-600 rounded-lg p-2 flex items-center">
               <p class="text-xs leading-relaxed">  
                 <span class="font-bold">Atenção</span>, o atleta que você está tentando inscrever está atualmente suspenso até {{ formatDate(member.ban_expires_at) }}, por decisão da {{ member.banned_by }}.<br>Em caso de dúvidas, entre em contato com o administrador da Liga Bola 7.
               </p>
@@ -98,6 +98,10 @@
       baseURL: '<?= base_url() ?>',
       member: <?= json_encode($member ?? []) ?>
     }
+
+    window.addEventListener('load', () => {
+      document.querySelector('#ban-message').classList.remove('hidden')
+    })
 
     Vue.createApp({
       data () {
