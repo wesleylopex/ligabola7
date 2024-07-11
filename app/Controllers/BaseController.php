@@ -66,7 +66,7 @@ abstract class BaseController extends Controller
             $teamDivisionModel = new TeamDivisionModel();
             $this->currentTeamDivision = $teamDivisionModel->where([
                 'team_id' => $this->currentTeam->id
-            ])->first();
+            ])->orderBy('id', 'DESC')->first();
 
             if ($this->currentTeamDivision) {
                 $divisionModel = new DivisionModel();
