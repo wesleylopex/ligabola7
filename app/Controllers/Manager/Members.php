@@ -8,6 +8,7 @@ use App\Models\MemberModel;
 use App\Models\MemberTeamDivisionModel;
 use App\Models\TeamModel;
 use App\Models\TeamDivisionModel;
+use App\Models\DivisionModel;
 
 class Members extends BaseController {
   public function create () {
@@ -58,18 +59,36 @@ class Members extends BaseController {
 
     $memberTeamDivisionModel = new MemberTeamDivisionModel();
 
-    $limitExceed = $memberTeamDivisionModel->where([
-      'role' => 'athlete',
-      'team_division_id' => $this->currentTeamDivision->id,
-      'status' => 'approved'
-    ])->countAllResults() >= 23;
+    $limits = [
+      'athlete' => [
+        'name' => 'atletas',
+        'limit' => 23
+      ],
+      'coach' => [
+        'name' => 'treinadores',
+        'limit' => 1
+      ],
+      'president' => [
+        'name' => 'representantes legais',
+        'limit' => 1
+      ],
+      'assistant' => [
+        'name' => 'auxiliares',
+        'limit' => 1
+      ]
+    ];
 
     $memberRole = $this->request->getPost('role');
+    $memberTeamDivisionCount = $memberTeamDivisionModel->where([
+      'team_division_id' => $this->currentTeamDivision->id,
+      'role' => $memberRole,
+      'status' => 'approved'
+    ])->countAllResults();
 
-    if ($memberRole === 'athlete' && $limitExceed) {
+    if ($memberTeamDivisionCount >= $limits[$memberRole]['limit']) {
       return $this->response->setJSON([
         'success' => false,
-        'error' => 'Limite de atletas excedido'
+        'error' => 'Limite de ' . $limits[$memberRole]['name'] . ' excedido'
       ]);
     }
 
@@ -97,11 +116,25 @@ class Members extends BaseController {
         'member_id' => $memberAlreadyExists->id,
         'team_division_id !=' => $this->currentTeamDivision->id,
         'status !=' => 'denied'
-      ])->first();
+      ])->findAll();
 
-      if (!$ignoreMemberInAnotherTeam && $memberInAnotherTeam) {
-        $teamDivisionModel = new TeamDivisionModel();
-        $teamDivision = $teamDivisionModel->find($memberInAnotherTeam->team_division_id);
+      $memberInAnotherTeamInSameChampionship = null;
+
+      $teamDivisionModel = new TeamDivisionModel();
+      $divisionModel = new DivisionModel();
+
+      foreach ($memberInAnotherTeam as $mtd) {
+        $teamDivision = $teamDivisionModel->find($mtd->team_division_id);
+        $division = $divisionModel->find($teamDivision->division_id);
+
+        if ($division->championship_id === $this->currentDivision->championship_id) {
+          $memberInAnotherTeamInSameChampionship = $mtd;
+          break;
+        }
+      }
+
+      if (!$ignoreMemberInAnotherTeam && $memberInAnotherTeamInSameChampionship) {
+        $teamDivision = $teamDivisionModel->find($memberInAnotherTeamInSameChampionship->team_division_id);
 
         $teamModel = new TeamModel();
         $team = $teamModel->find($teamDivision->team_id);
