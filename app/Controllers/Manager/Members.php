@@ -47,13 +47,24 @@ class Members extends BaseController {
       'birth_date' => ['label' => 'Data de nascimento', 'rules' => 'required|valid_date[Y-m-d]'],
       'cpf' => ['label' => 'CPF', 'rules' => 'required'],
       'rg' => ['label' => 'RG', 'rules' => 'permit_empty'],
-      'role' => ['label' => 'Tipo', 'rules' => 'required|in_list[athlete,coach,president,assistant]'],
+      'role' => ['label' => 'Tipo', 'rules' => 'required|in_list[athlete,coach,president,assistant]']
     ];
 
     if (!$this->validate($validationRules)) {
       return $this->response->setJSON([
         'success' => false,
         'error' => $this->validator->getErrors(),
+      ]);
+    }
+
+    $role = $this->request->getPost('role');
+    $email = $this->request->getPost('email');
+    $phone = $this->request->getPost('phone');
+
+    if ($role === 'president' && empty($email) || empty($phone)) {
+      return $this->response->setJSON([
+        'success' => false,
+        'error' => 'E-mail e telefone são obrigatórios para Presidente / Representante legal'
       ]);
     }
 
@@ -103,6 +114,14 @@ class Members extends BaseController {
       'cpf' => $this->request->getPost('cpf'),
       'rg' => empty($rg) ? null : $rg
     ];
+
+    if (!empty($email)) {
+      $member['email'] = $email;
+    }
+
+    if (!empty($phone)) {
+      $member['phone'] = $phone;
+    }
 
     $memberAlreadyExists = $memberModel->where('cpf', $member['cpf'])
       ->first();

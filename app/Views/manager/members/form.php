@@ -40,7 +40,7 @@
           </div>
           <div class="lg:col-span-4">
             <label for="role" class="text-xs text-gray-800">Tipo de membro</label>
-            <select name="role" required id="role" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
+            <select name="role" required id="role" v-model="memberRole" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
               <option value=""></option>
               <option
                 value="athlete"
@@ -59,6 +59,16 @@
                 <?= !empty($member) && $member->role === 'president' ? 'selected' : '' ?>
               >Presidente / Representante legal</option>
             </select>
+            <label for="" class="error"></label>
+          </div>
+          <div v-if="memberRole === 'president'" class="lg:col-span-4">
+            <label for="" class="text-xs text-gray-800">E-mail</label>
+            <input type="email" required name="email" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
+            <label for="" class="error"></label>
+          </div>
+          <div v-if="memberRole === 'president'" class="lg:col-span-4">
+            <label for="" class="text-xs text-gray-800">Telefone</label>
+            <input type="text" required name="phone" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
             <label for="" class="error"></label>
           </div>
           <div class="lg:col-span-full">
@@ -109,7 +119,8 @@
           ...pageData,
           memberInAnotherTeam: null,
           ignoreMemberInAnotherTeam: false,
-          memberIsBanned: false
+          memberIsBanned: false,
+          memberRole: ''
         }
       },
       methods: {
@@ -178,6 +189,8 @@
             method: 'POST',
             body
           }).then(response => response.json())
+
+          console.log(response)
 
           if (response.memberInAnotherTeam) {
             this.memberInAnotherTeam = response.memberInAnotherTeam
