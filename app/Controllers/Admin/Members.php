@@ -73,6 +73,8 @@ class Members extends BaseController {
       'subscription_number' => empty($subscriptionNumber) ? null : $subscriptionNumber,
       'cpf' => $this->request->getPost('cpf'),
       'rg' => empty($rg) ? null : $rg,
+      'email' => $this->request->getPost('email'),
+      'phone' => $this->request->getPost('phone'),
       'birth_date' => $this->request->getPost('birth_date'),
       'banned_by' => $this->request->getPost('banned_by'),
       'banned_at' => !empty($this->request->getPost('banned_at')) ? $this->request->getPost('banned_at') : null,
