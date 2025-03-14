@@ -74,9 +74,9 @@
 
           <!-- New parental consent document field that shows only for minors -->
           <div v-show="isMinor" class="lg:col-span-4">
-            <label for="" class="text-xs text-gray-800">Documento de autorização dos pais/responsáveis <span class="text-red-500">*</span></label>
+            <label for="" class="text-xs text-gray-800">Termo de autorização dos pais/responsáveis <span class="text-red-500">*</span></label>
             <input type="file" name="parental_consent_document" accept=".pdf,.jpg,.jpeg,.png" class="mt-1 text-xs p-2 w-full rounded-md border border-gray-200 bg-transparent">
-            <p class="text-xs text-gray-500 mt-1">Envie um documento assinado pelos pais ou responsáveis autorizando a participação do menor.</p>
+            <p class="text-xs text-gray-500 mt-1">Anexar o documento assinado pelos pais ou responsáveis autorizando a participação do menor.</p>
             <label for="" class="error"></label>
           </div>
           <div class="lg:col-span-full">
