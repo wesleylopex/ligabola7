@@ -35,7 +35,7 @@
           </div>
           <div class="lg:col-span-4">
             <label for="" class="text-xs text-gray-800">Data de nascimento</label>
-            <input type="date" name="birth_date" value="<?= !empty($member) ? $member->birth_date : '' ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
+            <input type="date" required name="birth_date" v-model="birthDate" @change="checkAge()" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
             <label for="" class="error"></label>
           </div>
           <div class="lg:col-span-4">
@@ -69,6 +69,14 @@
           <div v-if="memberRole === 'president'" class="lg:col-span-4">
             <label for="" class="text-xs text-gray-800">Telefone</label>
             <input type="text" required name="phone" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
+            <label for="" class="error"></label>
+          </div>
+
+          <!-- New parental consent document field that shows only for minors -->
+          <div v-show="isMinor" class="lg:col-span-4">
+            <label for="" class="text-xs text-gray-800">Documento de autorização dos pais/responsáveis <span class="text-red-500">*</span></label>
+            <input type="file" name="parental_consent_document" accept=".pdf,.jpg,.jpeg,.png" class="mt-1 text-xs p-2 w-full rounded-md border border-gray-200 bg-transparent">
+            <p class="text-xs text-gray-500 mt-1">Envie um documento assinado pelos pais ou responsáveis autorizando a participação do menor.</p>
             <label for="" class="error"></label>
           </div>
           <div class="lg:col-span-full">
@@ -120,10 +128,28 @@
           memberInAnotherTeam: null,
           ignoreMemberInAnotherTeam: false,
           memberIsBanned: false,
-          memberRole: ''
+          memberRole: '',
+          isMinor: false,
+          birthDate: this.member && this.member.birth_date ? this.member.birth_date : ''
         }
       },
       methods: {
+        checkAge () {
+          if (!this.birthDate) return
+          
+          const today = new Date()
+          const birthDate = new Date(this.birthDate)
+          let age = today.getFullYear() - birthDate.getFullYear()
+          const m = today.getMonth() - birthDate.getMonth()
+          
+          if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--
+          }
+
+          console.log(age)
+          
+          this.isMinor = age < 18
+        },
         async findMember () {
           const cpf = document.querySelector('input[name="cpf"]').value
 
@@ -156,6 +182,12 @@
 
             input.value = member[name]
             input.readOnly = input.value
+            
+            // Update birthDate when birth_date is found
+            if (name === 'birth_date') {
+              this.birthDate = member[name]
+              this.checkAge()
+            }
           })
 
           const banExpiresAtTimestamp = member.ban_expires_at ? Date.parse(member.ban_expires_at.replace(' ', 'T')) : null
@@ -270,7 +302,8 @@
         }
       },
       mounted () {
-        this.checkInputsReadOnly()
+        this.checkInputsReadOnly();
+        this.checkAge();
       }
     }).mount('main')
   </script>

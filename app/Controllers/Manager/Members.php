@@ -50,13 +50,25 @@ class Members extends BaseController {
       'role' => ['label' => 'Tipo', 'rules' => 'required|in_list[athlete,coach,president,assistant]']
     ];
 
+    // Check if member is under 18 and require parental consent document
+    $birthDate = $this->request->getPost('birth_date');
+    if (!empty($birthDate)) {
+      $age = (new \DateTime())->diff(new \DateTime($birthDate))->y;
+      if ($age < 18) {
+        $validationRules['parental_consent_document'] = [
+          'label' => 'Documento de autorização dos pais/responsáveis',
+          'rules' => 'uploaded[parental_consent_document]'
+        ];
+      }
+    }
+
     if (!$this->validate($validationRules)) {
       return $this->response->setJSON([
         'success' => false,
         'error' => $this->validator->getErrors(),
       ]);
     }
-
+    
     $role = $this->request->getPost('role');
     $email = $this->request->getPost('email');
     $phone = $this->request->getPost('phone');
@@ -200,6 +212,17 @@ class Members extends BaseController {
       ]);
     }
 
+    // Handle file upload for parental consent document
+    $consentFile = $this->request->getFile('parental_consent_document');
+    if ($consentFile && $consentFile->isValid()) {
+      $originalName = $consentFile->getClientName();
+      $extension = pathinfo($originalName, PATHINFO_EXTENSION);
+      $slugifiedName = url_title(pathinfo($originalName, PATHINFO_FILENAME), '-', true);
+      $newName = "parental_consent_document_{$slugifiedName}.{$extension}";
+      $consentFile->move('uploads/documents/parental_consent', $newName);
+      $member['parental_consent_document'] = $newName;
+    }
+    
     $success = $memberModel->save($member);
 
     if (!$success) {
