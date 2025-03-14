@@ -123,7 +123,8 @@
           status: localStorage.getItem('status') || 'pending',
           approveInfo: {
             id: null,
-            subscription_number: null
+            subscription_number: null,
+            parental_consent_document: null
           },
         }
       },
@@ -168,8 +169,6 @@
             body
           }).then(response => response.json())
 
-          console.log(response)
-
           setFormIsLoading(form, false)
 
           if (!response.success) {
@@ -210,7 +209,8 @@
 
           this.approveInfo = {
             id: member.id,
-            subscription_number: member.subscription_number
+            subscription_number: member.subscription_number,
+            parental_consent_document: member.parental_consent_document
           }
 
           const action = `${this.baseURL}admin/members-teams-divisions/approve`

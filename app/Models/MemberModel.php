@@ -74,7 +74,8 @@ class MemberModel extends Model {
         members.subscription_number,
         members.rg,
         members.birth_date,
-
+        
+        members_teams_divisions.parental_consent_document,
         members_teams_divisions.id,
         members_teams_divisions.role as role,
         members_teams_divisions.status as status,

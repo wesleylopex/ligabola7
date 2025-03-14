@@ -8,19 +8,19 @@ class AddParentalConsentDocument extends Migration
 {
     public function up()
     {
-        $this->forge->addColumn('members', [
+        $this->forge->addColumn('members_teams_divisions', [
             'parental_consent_document' => [
                 'type' => 'VARCHAR',
                 'constraint' => 255,
                 'null' => true,
                 'default' => null,
-                'after' => 'phone'
+                'after' => 'role'
             ]
         ]);
     }
 
     public function down()
     {
-        $this->forge->dropColumn('members', 'parental_consent_document');
+        $this->forge->dropColumn('members_teams_divisions', 'parental_consent_document');
     }
 }

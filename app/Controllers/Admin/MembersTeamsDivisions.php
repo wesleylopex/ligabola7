@@ -130,9 +130,7 @@ class MembersTeamsDivisions extends BaseController {
     }
 
     $memberTeamDivisionModel = new MemberTeamDivisionModel();
-    $memberTeamDivision = $memberTeamDivisionModel->where([
-      'id' => $this->request->getPost('id'),
-    ])->first(); 
+    $memberTeamDivision = $memberTeamDivisionModel->find($this->request->getPost('id'));
 
     if (!$memberTeamDivision) {
       return $this->response->setJSON(['success' => false, 'error' => 'Não foi possível encontrar o membro do time']);

@@ -87,6 +87,24 @@
             <input type="text" placeholder="Digite aqui o motivo pelo qual o membro foi reprovado" name="denied_reason" :value="mtd.denied_reason" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
             <label for="" class="error"></label>
           </div>
+          
+          <!-- Parental consent document section -->
+          <div v-show="mtd.parental_consent_document" class="lg:col-span-4">
+            <label class="text-xs text-gray-800">Documento de autorização dos pais/responsáveis</label>
+            <div class="mt-1 flex items-center">
+              <a
+                :href="`${baseURL}uploads/documents/parental_consent/${mtd.parental_consent_document}`" 
+                target="_blank"
+                download
+              >
+                <p class="text-xs text-blue-600 flex items-center">
+                  <i class="w-4 h-4 mr-2" data-feather="download"></i>
+                  Baixar documento
+                </p>
+              </a>
+            </div>
+          </div>
+          
           <div class="lg:col-span-12 flex justify-end">
           <button type="submit" data-loader=".feather-loader" class="flex items-center justify-center text-sm py-2 px-4 rounded-md font-medium bg-blue-600 text-white">
             Salvar

@@ -211,17 +211,6 @@ class Members extends BaseController {
         'error' => 'RG já cadastrado'
       ]);
     }
-
-    // Handle file upload for parental consent document
-    $consentFile = $this->request->getFile('parental_consent_document');
-    if ($consentFile && $consentFile->isValid()) {
-      $originalName = $consentFile->getClientName();
-      $extension = pathinfo($originalName, PATHINFO_EXTENSION);
-      $slugifiedName = url_title(pathinfo($originalName, PATHINFO_FILENAME), '-', true);
-      $newName = "parental_consent_document_{$slugifiedName}.{$extension}";
-      $consentFile->move('uploads/documents/parental_consent', $newName);
-      $member['parental_consent_document'] = $newName;
-    }
     
     $success = $memberModel->save($member);
 
@@ -241,6 +230,18 @@ class Members extends BaseController {
       'status' => 'pending',
       'role' => $memberRole
     ];
+
+    // Handle file upload for parental consent document
+    $consentFile = $this->request->getFile('parental_consent_document');
+    if ($consentFile && $consentFile->isValid()) {
+      $originalName = $consentFile->getClientName();
+      $extension = pathinfo($originalName, PATHINFO_EXTENSION);
+      $slugifiedName = url_title(pathinfo($originalName, PATHINFO_FILENAME), '-', true);
+      $newName = "parental_consent_document_{$slugifiedName}.{$extension}";
+      $consentFile->move('uploads/documents/parental_consent', $newName);
+
+      $memberTeamDivision['parental_consent_document'] = $newName;
+    }
 
     $success = $memberTeamDivisionModel->save($memberTeamDivision);
 
