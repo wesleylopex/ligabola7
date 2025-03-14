@@ -61,11 +61,13 @@ class Members extends BaseController {
     $email = $this->request->getPost('email');
     $phone = $this->request->getPost('phone');
 
-    if ($role === 'president' && empty($email) || empty($phone)) {
-      return $this->response->setJSON([
-        'success' => false,
-        'error' => 'E-mail e telefone são obrigatórios para Presidente / Representante legal'
-      ]);
+    if ($role === 'president') {
+        if (empty($email) || empty($phone)) {
+          return $this->response->setJSON([
+            'success' => false,
+            'error' => 'E-mail e telefone são obrigatórios para Presidente / Representante legal'
+          ]);
+        }
     }
 
     $memberTeamDivisionModel = new MemberTeamDivisionModel();
@@ -92,8 +94,7 @@ class Members extends BaseController {
     $memberRole = $this->request->getPost('role');
     $memberTeamDivisionCount = $memberTeamDivisionModel->where([
       'team_division_id' => $this->currentTeamDivision->id,
-      'role' => $memberRole,
-      'status' => 'approved'
+      'role' => $memberRole
     ])->countAllResults();
 
     if ($memberTeamDivisionCount >= $limits[$memberRole]['limit']) {

@@ -63,6 +63,16 @@
             <label for="" class="error"></label>
           </div>
           <div class="lg:col-span-4">
+            <label for="" class="text-xs text-gray-800">E-mail</label>
+            <input type="email" name="email" value="<?= !empty($member) ? $member->email : '' ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
+            <label for="" class="error"></label>
+          </div>
+          <div class="lg:col-span-4">
+            <label for="" class="text-xs text-gray-800">Telefone</label>
+            <input type="text" name="phone" value="<?= !empty($member) ? $member->phone : '' ?>" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
+            <label for="" class="error"></label>
+          </div>
+          <div class="lg:col-span-4">
             <label for="status" class="text-xs text-gray-800">Status</label>
             <select name="status" v-model="mtd.status" class="mt-1 text-sm p-2 w-full rounded-md border border-gray-200 bg-transparent">
               <option value=""></option>
