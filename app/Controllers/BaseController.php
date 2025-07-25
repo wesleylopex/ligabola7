@@ -47,6 +47,10 @@ abstract class BaseController extends Controller
      */
     // protected $session;
 
+    protected $currentTeamDivision;
+    protected $currentTeam;
+    protected $currentDivision;
+
     /**
      * @return void
      */

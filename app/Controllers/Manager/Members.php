@@ -106,10 +106,14 @@ class Members extends BaseController {
     $memberRole = $this->request->getPost('role');
     $memberTeamDivisionCount = $memberTeamDivisionModel->where([
       'team_division_id' => $this->currentTeamDivision->id,
-      'role' => $memberRole
+      'role' => $memberRole,
     ])->countAllResults();
 
-    if ($memberTeamDivisionCount >= $limits[$memberRole]['limit']) {
+    $isUpdating = !empty($this->request->getPost('id'));
+
+    $hasLimit = $limits[$memberRole]['limit'] > $memberTeamDivisionCount;
+
+    if (!$isUpdating && !$hasLimit) {
       return $this->response->setJSON([
         'success' => false,
         'error' => 'Limite de ' . $limits[$memberRole]['name'] . ' excedido'
@@ -118,7 +122,6 @@ class Members extends BaseController {
 
     $memberModel = new MemberModel();
 
-    $isUpdating = !empty($this->request->getPost('id'));
     $rg = $this->request->getPost('rg');
 
     $member = [
