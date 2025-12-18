@@ -11,6 +11,11 @@ $routes->get('/migrate', 'Migrate::index');
 $routes->get('/manager/login', 'Manager\Login::index', ['filter' => 'already-auth']);
 $routes->post('/manager/login', 'Manager\Login::attempt', ['filter' => 'already-auth']);
 
+$routes->get('/manager/forgot-password', 'Manager\ForgotPassword::index', ['filter' => 'already-auth']);
+$routes->post('/manager/forgot-password/handle', 'Manager\ForgotPassword::handle', ['filter' => 'already-auth']);
+$routes->get('/manager/forgot-password/reset', 'Manager\ForgotPassword::reset', ['filter' => 'already-auth']);
+$routes->post('/manager/forgot-password/save', 'Manager\ForgotPassword::save', ['filter' => 'already-auth']);
+
 $routes->group('manager', ['filter' => 'auth'], static function ($routes) {
   $routes->get('login/logout', 'Manager\Login::logout');
 
