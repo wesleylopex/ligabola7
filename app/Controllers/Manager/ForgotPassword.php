@@ -24,7 +24,9 @@ class ForgotPassword extends BaseController {
       return redirect()->to('manager/login');
     }
 
-    return view('manager/forgot-password/reset');
+    return view('manager/forgot-password/reset', [
+      'code' => $code
+    ]);
   }
 
   public function save () {
@@ -70,7 +72,7 @@ class ForgotPassword extends BaseController {
     if (!$team) {
       return $this->response->setJSON([
         'success' => false,
-        'error' => 'E-mail não cadastrado'
+        'error' => 'Se o email estiver cadastrado, você receberá o link para redefinição'
       ])->setStatusCode(400);
     }
 
@@ -94,6 +96,18 @@ class ForgotPassword extends BaseController {
   }
 
   private function sendEmail (string $email, string $randomCode): bool {
-    return true;
+    $url = base_url('manager/forgot-password/reset?code=' . $randomCode);
+
+    $message = view('manager/forgot-password/email', [
+      'url' => $url
+    ]);
+
+    $emailService = new \CodeIgniter\Email\Email();
+    $emailService->setFrom('noreply@ligabola7.com.br', 'Liga Bola 7');
+    $emailService->setTo($email);
+    $emailService->setSubject('Recuperação de senha');
+    $emailService->setMessage($message);
+
+    return $emailService->send();
   }
 }

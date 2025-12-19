@@ -12,6 +12,7 @@
       <div class="p-8 md:p-12 grid place-items-center">
         <form @submit.prevent="onFormSubmit()" method="post" class="w-full" action="<?= base_url('manager/forgot-password/save') ?>">
           <?= csrf_field() ?>
+          <input type="hidden" name="code" value="<?= $code ?>">
           <div class="mb-8">
             <img class="w-24" src="<?= base_url('images/logo.png') ?>" alt="Liga Bola 7 Society">
             <h1 class="text-2xl font-bold mt-8">Nova senha</h1>
@@ -52,10 +53,6 @@
         async onFormSubmit () {
           const form = document.querySelector('form')
           const body = new FormData(form)
-
-          const code = new URLSearchParams(window.location.search).get('code')
-
-          body.append('code', code)
 
           setFormIsLoading(form, true)
 

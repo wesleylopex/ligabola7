@@ -59,6 +59,8 @@
             body
           }).then(response => response.json())
 
+          console.log(response)
+
           if (!response.success) {
             const error = typeof response.error === 'string'
               ? response.error
@@ -69,7 +71,7 @@
           }
 
           setFormIsLoading(form, false, true)
-          showNotification('E-mail enviado, verifique sua caixa de entrada')
+          showNotification('Se o email estiver cadastrado, você receberá o link para redefinição')
 
           setTimeout(() => window.location.href = `${pageData.baseURL}/manager`, 2000)
         }
