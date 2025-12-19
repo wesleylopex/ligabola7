@@ -106,6 +106,7 @@ class ForgotPassword extends BaseController {
     $emailService->setFrom('noreply@ligabola7.com.br', 'Liga Bola 7');
     $emailService->setTo($email);
     $emailService->setSubject('Recuperação de senha');
+    $emailService->setMailType('html');
     $emailService->setMessage($message);
 
     return $emailService->send();
