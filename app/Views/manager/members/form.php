@@ -289,6 +289,12 @@
             return ''
           }
 
+          // Manually parse YYYY-MM-DD to avoid timezone issues that might shift the date
+          if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}/.test(date)) {
+            const [year, month, day] = date.split(' ')[0].split('-')
+            return `${day}/${month}/${year}`
+          }
+
           return new Date(date).toLocaleDateString('pt-BR')
         }
       },
