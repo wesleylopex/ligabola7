@@ -4,6 +4,9 @@ namespace App\Controllers\Manager;
 
 use App\Controllers\BaseController;
 use App\Models\TeamModel;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception as PHPMailerException;
+use Throwable;
 
 class ForgotPassword extends BaseController {
   public function index (): string {
@@ -60,7 +63,10 @@ class ForgotPassword extends BaseController {
       'reset_code' => null
     ]);
 
-    return $this->response->setJSON(['success' => true])->setStatusCode(200);
+    return $this->response->setJSON([
+      'success' => true,
+      'message' => 'Senha redefinida com sucesso'
+    ])->setStatusCode(200);
   }
 
   public function handle () {
@@ -72,19 +78,19 @@ class ForgotPassword extends BaseController {
     if (!$team) {
       return $this->response->setJSON([
         'success' => false,
-        'error' => 'Se o email estiver cadastrado, você receberá o link para redefinição'
-      ])->setStatusCode(400);
+        'error' => 'Email não encontrado'
+      ])->setStatusCode(404);
     }
 
     // code with 12 random chars, a-z, A-Z, 0-9
     $randomCode = bin2hex(random_bytes(6));
-    
-    $emailSent = $this->sendEmail($team->email, $randomCode);
 
-    if (!$emailSent) {
+    $sendEmailResult = $this->sendEmail($team->email, $randomCode);
+
+    if (!$sendEmailResult['success']) {
       return $this->response->setJSON([
         'success' => false,
-        'error' => 'Erro ao enviar e-mail'
+        'error' => $sendEmailResult['error']
       ])->setStatusCode(500);
     }
 
@@ -92,23 +98,42 @@ class ForgotPassword extends BaseController {
       'reset_code' => $randomCode
     ]);
 
-    return $this->response->setJSON(['success' => true])->setStatusCode(200);
+    return $this->response->setJSON([
+      'success' => true,
+      'message' => 'E-mail enviado com sucesso'
+    ])->setStatusCode(200);
   }
 
-  private function sendEmail (string $email, string $randomCode): bool {
-    $url = base_url('manager/forgot-password/reset?code=' . $randomCode);
+  private function sendEmail (string $email, string $randomCode): array {
+    try {
+      $emailConfig = config('Email');
 
-    $message = view('manager/forgot-password/email', [
-      'url' => $url
-    ]);
+      $mailer = new PHPMailer(true);
+      $mailer->isSMTP();
+      $mailer->Host       = $emailConfig->SMTPHost;
+      $mailer->SMTPAuth   = true;
+      $mailer->Username   = $emailConfig->SMTPUser;
+      $mailer->Password   = $emailConfig->SMTPPass;
+      $mailer->SMTPSecure = $emailConfig->SMTPCrypto;
+      $mailer->Port       = $emailConfig->SMTPPort;
+      $mailer->Timeout    = $emailConfig->SMTPTimeout;
+      $mailer->CharSet    = $emailConfig->charset;
 
-    $emailService = new \CodeIgniter\Email\Email();
-    $emailService->setFrom('noreply@ligabola7.com.br', 'Liga Bola 7');
-    $emailService->setTo($email);
-    $emailService->setSubject('Recuperação de senha');
-    $emailService->setMailType('html');
-    $emailService->setMessage($message);
+      $mailer->setFrom($emailConfig->fromEmail, $emailConfig->fromName);
+      $mailer->addAddress($email);
+      $mailer->isHTML(true);
+      $mailer->Subject = 'Recuperação de senha';
+      $mailer->Body    = view('manager/forgot-password/email', [
+        'url' => base_url('manager/forgot-password/reset?code=' . $randomCode)
+      ]);
 
-    return $emailService->send();
+      $mailer->send();
+
+      return ['success' => true, 'error' => null];
+    } catch (PHPMailerException $exception) {
+      return ['success' => false, 'error' => $exception->getMessage()];
+    } catch (Throwable $exception) {
+      return ['success' => false, 'error' => 'Erro crítico ao enviar e-mail: ' . $exception->getMessage()];
+    }
   }
 }

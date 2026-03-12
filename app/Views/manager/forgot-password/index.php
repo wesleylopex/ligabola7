@@ -71,7 +71,7 @@
           }
 
           setFormIsLoading(form, false, true)
-          showNotification('Se o email estiver cadastrado, você receberá o link para redefinição')
+          showNotification(response.message || 'Verifique seu email')
 
           setTimeout(() => window.location.href = `${pageData.baseURL}/manager`, 2000)
         }
